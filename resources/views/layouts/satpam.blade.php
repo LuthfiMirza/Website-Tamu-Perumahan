@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/css/mobile-optimize.css">
     <link rel="stylesheet" href="/css/tambah-tamu.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body class="bg-gray-100">
     <div class="app-container">
@@ -281,10 +282,10 @@
                 cancelButton: 'px-6 py-2 rounded-md text-white font-medium hover:bg-red-600 transition-colors'
             },
             showClass: {
-                popup: 'animate__animated animate__fadeInDown animate__faster'
+                popup: 'animate__animated animate__fadeIn'
             },
             hideClass: {
-                popup: 'animate__animated animate__fadeOutUp animate__faster'
+                popup: 'animate__animated animate__fadeOut'
             },
             backdrop: `
                 rgba(0,0,0,0.4)

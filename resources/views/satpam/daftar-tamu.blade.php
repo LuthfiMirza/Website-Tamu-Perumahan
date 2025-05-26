@@ -12,6 +12,9 @@
         <p>{{ session('error') }}</p>
       </div>
       @endif
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <div id="daftar-tamu-content">
     <div class="card">
         <div class="card-header">
@@ -112,9 +115,9 @@
                   <td class="py-2 px-5">{{ $tamu->tujuan }}</td>
                   <td class="py-2 px-5">
                     @if(strtolower($tamu->posisi) == 'sedang didalam')
-                    <form action="{{ route('satpam.logout-tamu', $tamu->id) }}" method="POST" class="inline-block">
+                    <form action="{{ route('satpam.logout-tamu', $tamu->id) }}" method="POST" class="inline-block" id="logout-form-{{$tamu->id}}">
                       @csrf
-                      <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-medium inline-flex items-center gap-1" onclick="return confirm('Apakah Anda yakin ingin logout tamu ini?')">
+                      <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-medium inline-flex items-center gap-1" onclick="confirmLogoutTamu({{$tamu->id}})">
                         <i class="fas fa-sign-out-alt"></i> Logout
                       </button>
                     </form>
@@ -254,4 +257,44 @@
         </div>
     </div>
 </div>
+
+<script>
+function confirmLogoutTamu(id) {
+  Swal.fire({
+    title: 'Konfirmasi Logout',
+    text: 'Apakah Anda yakin ingin logout tamu ini?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#22c55e',
+    cancelButtonColor: '#ef4444',
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Tidak',
+    background: '#fff',
+    customClass: {
+      popup: 'rounded-lg shadow-xl',
+      title: 'text-xl font-semibold text-gray-800',
+      content: 'text-gray-600 mt-2',
+      confirmButton: 'px-6 py-2 rounded-md text-white font-medium hover:bg-green-600 transition-colors',
+      cancelButton: 'px-6 py-2 rounded-md text-white font-medium hover:bg-red-600 transition-colors'
+    },
+    showClass: {
+      popup: 'animate__animated animate__fadeIn'
+    },
+    hideClass: {
+      popup: 'animate__animated animate__fadeOut'
+    },
+    backdrop: 'rgba(0,0,0,0.4)',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: true,
+    focusConfirm: false,
+    heightAuto: false,
+    padding: '2em'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      document.getElementById('logout-form-'+id).submit();
+    }
+  });
+}
+</script>
 @endsection

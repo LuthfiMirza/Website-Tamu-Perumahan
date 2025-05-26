@@ -19,16 +19,19 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
 
-        /*  foreach ($guards as $guard) {
+        foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::guard($guard)->user();
+                
+                // Redirect berdasarkan role
                 if ($user->nama_role === 'satpam') {
-                    return redirect('/satpam');*/
+                    return redirect()->route('satpam.dashboard');
                 } elseif ($user->nama_role === 'admin') {
                     return redirect('/filament');
                 }
+                
+                return redirect(RouteServiceProvider::HOME);
             }
-            return redirect(RouteServiceProvider::HOME);
         }
 
         return $next($request);

@@ -12,6 +12,15 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        if ($request->expectsJson()) {
+            return null;
+        }
+        
+        // Jika request URL mengandung 'satpam', arahkan ke login satpam
+        if (str_contains($request->path(), 'satpam')) {
+            return route('satpam.login');
+        }
+        
+        return route('login');
     }
 }
