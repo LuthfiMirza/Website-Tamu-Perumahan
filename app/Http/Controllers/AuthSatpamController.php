@@ -39,6 +39,8 @@ class AuthSatpamController extends Controller
             // Cek apakah user memiliki role satpam
             if ($user->nama_role === 'satpam') {
                 $request->session()->regenerate();
+                // Tambahkan flash message untuk notifikasi welcome
+                session()->flash('login_success', true);
                 return redirect()->intended(route('satpam.dashboard'));
             } else {
                 Auth::logout();
