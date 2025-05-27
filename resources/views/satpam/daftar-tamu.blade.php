@@ -156,9 +156,9 @@
           
           .table-responsive th:first-child,
           .table-responsive td:first-child {
-            position: sticky;
+            
             left: 0;
-            background: white;
+            
             z-index: 1;
           }
           

@@ -141,7 +141,7 @@
                             <span x-show="notificationCount > 0" class="notification-badge" x-text="notificationCount"></span>
                         </button>
                         <div x-show="open" x-cloak 
-                             class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl py-2 z-50"
+                             class="notification-dropdown"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
                              x-transition:enter-end="opacity-100 transform scale-100"
@@ -417,7 +417,7 @@
             position: absolute;
             top: 100%;
             right: 0;
-            width: 320px;
+            width: 240px;
             background: white;
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -425,13 +425,32 @@
             z-index: 50;
         }
 
+        @media (max-width: 768px) {
+            .notification-dropdown {
+                position: fixed;
+                inset-inline: 0;
+                top: 4rem;
+                margin-inline: auto;
+                width: 15rem;
+                max-width: 100vw;
+                right: 0;
+                left: 0;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .notification-dropdown {
+                width: 90%;
+                max-width: 240px;
+            }
+        }
         .notification-header {
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
         }
 
         .notification-body {
-            max-height: 300px;
+            max-height: 290px;
             overflow-y: auto;
         }
 
