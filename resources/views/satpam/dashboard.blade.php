@@ -1,7 +1,16 @@
 @extends('layouts.satpam')
 
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 @section('content')
 <div class="content">
+    <!-- Notifikasi Welcome -->
+    <div class="alert alert-success mb-4 animate__animated animate__fadeIn" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; border-left: 5px solid #28a745; margin-bottom: 20px;">
+        <i class="fas fa-bell mr-2"></i> Selamat datang, <strong>{{ Auth::user()->name }}</strong>! Anda berhasil login sebagai Satpam.
+    </div>
+    
     <!-- Dashboard Content -->
     <div class="page-content active" id="dashboard-content">
         <link rel="stylesheet" href="{{ asset('css/satpam/dashboard.css') }}">

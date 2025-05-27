@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tamu;
+use App\Models\PenjadwalanSatpam;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -92,6 +93,55 @@ class SatpamController extends Controller
             'success' => true,
             'message' => 'Tamu berhasil ditambahkan',
             'data' => $tamu
+        ]);
+    }
+    
+    /**
+     * Mengambil data tamu baru untuk notifikasi
+     */
+    public function getNewGuests()
+    {
+        $lastChecked = session('last_notification_check', now()->subMinutes(30));
+        
+        $newGuests = Tamu::where('created_at', '>', $lastChecked)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+        
+        session(['last_notification_check' => now()]);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $newGuests,
+            'count' => $newGuests->count()
+        ]);
+    }
+    
+    /**
+     * Mengambil jadwal satpam untuk notifikasi
+     */
+    public function getJadwalSatpam()
+    {
+        $jadwal = [];
+        $user = auth()->user();
+        
+        // Ambil jadwal satpam berdasarkan nama user yang login
+        $penjadwalan = PenjadwalanSatpam::where('nama', $user->name)->first();
+        
+        if ($penjadwalan) {
+            $jadwal = [
+                'senin' => $penjadwalan->senin,
+                'selasa' => $penjadwalan->selasa,
+                'rabu' => $penjadwalan->rabu,
+                'kamis' => $penjadwalan->kamis,
+                'jumat' => $penjadwalan->jumat,
+                'sabtu' => $penjadwalan->sabtu,
+                'minggu' => $penjadwalan->minggu
+            ];
+        }
+        
+        return response()->json([
+            'success' => true,
+            'jadwal' => $jadwal
         ]);
     }
 }
