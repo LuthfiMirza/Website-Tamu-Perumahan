@@ -9,7 +9,7 @@ use App\Models\PenjadwalanSatpam;
 // Ambil data tamu hari ini
 $today = Carbon::today();
 $tamuHariIni = Tamu::whereDate('tanggal', $today)->get();
-$tamuMasuk = $tamuHariIni->where('posisi', 'masuk')->count();
+$tamuMasuk = $tamuHariIni->where('posisi', 'sedang didalam')->count();
 $tamuKeluar = $tamuHariIni->where('posisi', 'sudah keluar')->count();
 $totalTamu = $tamuHariIni->count();
 
@@ -66,7 +66,7 @@ $lusa = strtolower(Carbon::tomorrow()->addDay()->locale('id')->dayName);
                 </div>
                 <div class="stat-info">
                     <h3>{{ $tamuMasuk }}</h3>
-                    <p>Tamu Masuk</p>
+                    <p>sedang didalam</p>
                 </div>
             </div>
             

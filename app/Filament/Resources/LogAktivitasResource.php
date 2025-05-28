@@ -57,6 +57,10 @@ class LogAktivitasResource extends Resource
                 Tables\Columns\TextColumn::make('waktu')
                     ->sortable()
                     ->dateTime('d M Y H:i'),
+                Tables\Columns\TextColumn::make('deskripsi')
+                    ->sortable()
+                    ->searchable()
+                    ->wrap(),
             ])
             ->defaultSort('waktu', 'desc')
             ->filters([

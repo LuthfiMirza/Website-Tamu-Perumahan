@@ -35,5 +35,6 @@ Route::prefix('satpam')->group(function () {
     })->name('satpam.jadwal-satpam')->middleware('auth');
     
     Route::post('/logout-tamu/{id}', [SatpamController::class, 'logoutTamu'])->name('satpam.logout-tamu')->middleware('auth');
+    Route::post('/edit-tamu/{id}', [SatpamController::class, 'editTamu'])->name('satpam.edit-tamu')->middleware('auth');
     Route::post('/logout', [AuthSatpamController::class, 'logout'])->name('logout')->middleware('auth');
 });

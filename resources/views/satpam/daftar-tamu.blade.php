@@ -117,7 +117,7 @@
                     @if(strtolower($tamu->posisi) == 'sedang didalam')
                     <form action="{{ route('satpam.logout-tamu', $tamu->id) }}" method="POST" class="inline-block" id="logout-form-{{$tamu->id}}">
                       @csrf
-                      <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-medium inline-flex items-center gap-1" onclick="confirmLogoutTamu({{$tamu->id}})">
+                      <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-medium inline-flex items-center gap-1" onclick="confirmLogoutTamu('{{$tamu->id}}')">
                         <i class="fas fa-sign-out-alt"></i> Logout
                       </button>
                     </form>
@@ -156,9 +156,9 @@
           
           .table-responsive th:first-child,
           .table-responsive td:first-child {
-            
+            position: sticky;
             left: 0;
-            
+            background: white;
             z-index: 1;
           }
           

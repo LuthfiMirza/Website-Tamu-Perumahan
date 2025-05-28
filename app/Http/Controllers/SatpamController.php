@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Tamu;
 use App\Models\PenjadwalanSatpam;
+use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class SatpamController extends Controller
 {
@@ -51,8 +53,21 @@ class SatpamController extends Controller
             'jam_keluar' => now()
         ]);
 
-        return redirect()->route('satpam.daftar-tamu')
-            ->with('success', 'Tamu berhasil logout.');
+        try {
+            // Log aktivitas logout tamu
+            LogAktivitas::catatLogoutTamu(
+                strval(Auth::id()), // Convert to string
+                $tamu
+            );
+
+            return redirect()->route('satpam.daftar-tamu')
+                ->with('success', 'Tamu berhasil logout.');
+        } catch (\Exception $e) {
+            
+            
+            return redirect()->route('satpam.daftar-tamu')
+                ->with('error', 'Terjadi kesalahan saat mencatat aktivitas logout: ' . $e->getMessage());
+        }
     }
     
     /**
@@ -88,6 +103,9 @@ class SatpamController extends Controller
             'posisi' => $request->posisi,
             'tujuan' => $request->tujuan
         ]);
+
+        // Log aktivitas tambah tamu
+        LogAktivitas::catatTambahTamu(Auth::id(), $tamu);
 
         return response()->json([
             'success' => true,
@@ -142,6 +160,42 @@ class SatpamController extends Controller
         return response()->json([
             'success' => true,
             'jadwal' => $jadwal
+        ]);
+    }
+
+    /**
+     * Update data tamu
+     */
+    public function editTamu(Request $request, $id)
+    {
+        $tamu = Tamu::findOrFail($id);
+
+        $request->validate([
+            'jenis_tamu' => 'required|string',
+            'plat_nomor' => 'required|string',
+            'tanggal' => 'required|date',
+            'jam_masuk' => 'required',
+            'posisi' => 'required|string',
+            'tujuan' => 'required|string'
+        ]);
+
+        // Update guest record
+        $tamu->update([
+            'jenis_tamu' => $request->jenis_tamu,
+            'plat_nomor' => $request->plat_nomor,
+            'tanggal' => $request->tanggal,
+            'jam_masuk' => $request->jam_masuk,
+            'posisi' => $request->posisi,
+            'tujuan' => $request->tujuan
+        ]);
+
+        // Log aktivitas edit tamu
+        LogAktivitas::catatEditTamu(Auth::id(), $tamu);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data tamu berhasil diperbarui',
+            'data' => $tamu
         ]);
     }
 }

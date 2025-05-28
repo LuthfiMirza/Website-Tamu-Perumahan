@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('aktivitas');
             $table->string('user_id');
+            $table->text('deskripsi');
+            $table->timestamp('waktu');
             $table->timestamps();
         });
     }
