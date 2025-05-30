@@ -50,3 +50,16 @@
 </div>
 </div>
 @endsection
+
+<style>
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    th, td {
+        min-width: 100px;
+    }
+}
+</style>

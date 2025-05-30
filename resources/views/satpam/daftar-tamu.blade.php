@@ -142,7 +142,7 @@
             -webkit-overflow-scrolling: touch;
             margin: 0 -1rem;
             padding: 0 1rem;
-          }
+          } 
           
           .table-responsive table {
             width: 100%;
@@ -157,8 +157,6 @@
           .table-responsive th:first-child,
           .table-responsive td:first-child {
             position: sticky;
-            left: 0;
-            background: white;
             z-index: 1;
           }
           
