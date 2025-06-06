@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Tamu;
 use App\Models\PenjadwalanSatpam;
 use App\Models\LogAktivitas;
+use App\Exports\TamuExport;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SatpamController extends Controller
 {
@@ -36,10 +39,47 @@ class SatpamController extends Controller
     /**
      * Export data tamu ke PDF atau Excel
      */
-    public function exportTamu($type)
+    public function exportTamu(Request $request, $type)
     {
-        // Logika untuk export tamu akan diimplementasikan nanti
-        return redirect()->back()->with('message', 'Fitur export '.$type.' akan segera tersedia');
+        $filter = $request->get('filter', 'all');
+        
+        try {
+            if ($type === 'excel') {
+                $filename = 'data-tamu-' . ($filter === 'today' ? 'hari-ini-' : '') . date('Y-m-d-H-i-s') . '.xlsx';
+                return Excel::download(new TamuExport($filter === 'today' ? 'today' : null), $filename);
+                
+            } elseif ($type === 'pdf') {
+                $query = Tamu::query();
+                
+                if ($filter === 'today') {
+                    $query->whereDate('tanggal', today());
+                    $title = 'Data Tamu Hari Ini - ' . Carbon::today('Asia/Jakarta')->format('d/m/Y');
+                } else {
+                    $title = 'Semua Data Tamu';
+                }
+                
+                $tamus = $query->orderBy('tanggal', 'desc')
+                              ->orderBy('jam_masuk', 'desc')
+                              ->get();
+                
+                $pdf = Pdf::loadView('exports.tamu-pdf', [
+                    'tamus' => $tamus,
+                    'title' => $title,
+                    'filter' => $filter
+                ]);
+                
+                $pdf->setPaper('A4', 'landscape');
+                
+                $filename = 'data-tamu-' . ($filter === 'today' ? 'hari-ini-' : '') . date('Y-m-d-H-i-s') . '.pdf';
+                return $pdf->download($filename);
+                
+            } else {
+                return redirect()->back()->with('error', 'Tipe export tidak valid');
+            }
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export: ' . $e->getMessage());
+        }
     }
     
     /**

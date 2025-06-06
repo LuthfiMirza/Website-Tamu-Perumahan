@@ -22,7 +22,7 @@ $lusa = strtolower(Carbon::tomorrow()->addDay()->locale('id')->dayName);
 @endphp
 
 @section('content')
-<div class="content">
+<div class="content mobile-scroll-container">
     <!-- Notifikasi Welcome -->
     @if(session()->has('login_success'))
         <div id="welcome-alert" class="alert alert-success mb-4 animate__animated animate__fadeIn" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; border-left: 5px solid #28a745; margin-bottom: 20px;"> 
@@ -178,6 +178,152 @@ $lusa = strtolower(Carbon::tomorrow()->addDay()->locale('id')->dayName);
             </div>
         </div>
     </div>
-</div>@endsection
+</div>
     </div>
 </div>
+
+<style>
+/* Mobile scrolling fix for dashboard */
+.mobile-scroll-container {
+    height: auto;
+    overflow: visible;
+}
+
+@media (max-width: 768px) {
+    /* Ensure main content area is scrollable */
+    #main-content {
+        height: 100vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Content padding adjustment */
+    #main-content .p-6 {
+        padding: 1rem !important;
+        height: calc(100vh - 80px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 4rem !important;
+    }
+    
+    /* Mobile scrolling fixes */
+    .mobile-scroll-container {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding-bottom: 4rem !important;
+        margin-bottom: 2rem !important;
+    }
+    
+    .content {
+        overflow: visible !important;
+        padding-bottom: 3rem !important;
+    }
+    
+    /* Stats grid responsive */
+    .stats-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem !important;
+        overflow: visible !important;
+    }
+    
+    /* Card responsive */
+    .card {
+        margin-bottom: 1.5rem !important;
+        overflow: visible !important;
+    }
+    
+    .card-body {
+        overflow: visible !important;
+        padding: 1rem !important;
+    }
+    
+    /* Table responsive */
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        margin: 0 -1rem !important;
+        padding: 0 1rem !important;
+    }
+    
+    .table-responsive table {
+        width: 100% !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Page title responsive */
+    .page-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* Welcome alert responsive */
+    #welcome-alert {
+        margin-bottom: 1.5rem !important;
+        padding: 1rem !important;
+        font-size: 0.875rem !important;
+    }
+    
+    /* Row and column responsive */
+    .row {
+        margin: 0 !important;
+    }
+    
+    .col-12 {
+        padding: 0 !important;
+    }
+    
+    /* Extra small screens (390px and below) */
+    @media (max-width: 390px) {
+        .mobile-scroll-container {
+            padding-bottom: 5rem !important;
+        }
+        
+        .content {
+            padding-bottom: 4rem !important;
+        }
+        
+        #main-content .p-6 {
+            padding-bottom: 6rem !important;
+        }
+        
+        .stats-grid {
+            gap: 0.75rem !important;
+        }
+        
+        .stat-card {
+            padding: 1rem !important;
+        }
+        
+        .card-body {
+            padding: 0.75rem !important;
+        }
+        
+        .page-title {
+            font-size: 1.25rem !important;
+        }
+    }
+}
+
+/* Desktop - ensure normal behavior */
+@media (min-width: 769px) {
+    .mobile-scroll-container {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    #main-content .p-6 {
+        height: auto !important;
+        overflow: visible !important;
+        padding-bottom: 1.5rem !important;
+    }
+}
+</style>
+
+@endsection

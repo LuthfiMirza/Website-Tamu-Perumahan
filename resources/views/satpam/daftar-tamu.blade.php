@@ -15,27 +15,166 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<div id="daftar-tamu-content">
+<div id="daftar-tamu-content" class="mobile-scroll-container">
     <div class="card">
         <div class="card-header">
             <h2>Daftar Tamu</h2>
         </div>
         <div class="card-body">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-2 md:space-y-0">
+        <div class="export-controls-container flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-2 md:space-y-0">
         <div class="flex flex-wrap gap-2">
           <a href="{{ route('satpam.daftar-tamu') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium">Semua Data</a>
           <a href="{{ route('satpam.daftar-tamu', ['filter' => 'today']) }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium">Data Hari Ini</a>
         </div>
         <div class="flex flex-wrap gap-2">
-          <a href="{{ route('satpam.export-tamu', ['type' => 'pdf']) }}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium flex items-center">
-            <i class="fas fa-file-pdf mr-1 md:mr-2"></i> Export PDF
-          </a>
-          <a href="{{ route('satpam.export-tamu', ['type' => 'excel']) }}" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium flex items-center">
-            <i class="fas fa-file-excel mr-1 md:mr-2"></i> Export Excel
-          </a>
+          <div class="relative" x-data="{ open: false }" x-ref="pdfDropdown">
+            <button @click="open = !open" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium flex items-center">
+              <i class="fas fa-file-pdf mr-1 md:mr-2"></i> Export PDF <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+            <div x-show="open" @click.away="open = false" x-cloak 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform scale-95"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-95"
+                 class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border"
+                 style="z-index: 99999 !important; position: fixed !important; top: auto !important;">
+              <a href="{{ route('satpam.export-tamu', ['type' => 'pdf', 'filter' => 'all']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="fas fa-file-pdf mr-2 text-red-500"></i> Semua Data PDF
+              </a>
+              <a href="{{ route('satpam.export-tamu', ['type' => 'pdf', 'filter' => 'today']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="fas fa-file-pdf mr-2 text-red-500"></i> Hari Ini PDF
+              </a>
+            </div>
+          </div>
+          
+          <div class="relative" x-data="{ open: false }" x-ref="excelDropdown">
+            <button @click="open = !open" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium flex items-center">
+              <i class="fas fa-file-excel mr-1 md:mr-2"></i> Export Excel <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+            <div x-show="open" @click.away="open = false" x-cloak 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform scale-95"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-95"
+                 class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border"
+                 style="z-index: 99999 !important; position: fixed !important; top: auto !important;">
+              <a href="{{ route('satpam.export-tamu', ['type' => 'excel', 'filter' => 'all']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="fas fa-file-excel mr-2 text-green-600"></i> Semua Data Excel
+              </a>
+              <a href="{{ route('satpam.export-tamu', ['type' => 'excel', 'filter' => 'today']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="fas fa-file-excel mr-2 text-green-600"></i> Hari Ini Excel
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <style>
+        [x-cloak] { display: none !important; }
+        
+        /* Dropdown styling */
+        .relative {
+          position: relative;
+          z-index: 1000;
+        }
+        
+        .relative div[x-show] {
+          position: absolute;
+          z-index: 9999 !important;
+          box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          border: 1px solid #e5e7eb;
+          background: white !important;
+          border-radius: 0.375rem;
+        }
+        
+        .relative div[x-show] a:hover {
+          background-color: #f3f4f6;
+          transition: background-color 0.15s ease-in-out;
+        }
+        
+        /* Ensure dropdown appears above everything */
+        .card {
+          position: relative;
+          z-index: 1;
+          overflow: visible !important;
+        }
+        
+        .card-header {
+          position: relative;
+          z-index: 100;
+          overflow: visible !important;
+        }
+        
+        .card-body {
+          position: relative;
+          z-index: 1;
+          overflow: visible !important;
+        }
+        
+        .overflow-x-auto {
+          position: relative;
+          z-index: 1;
+        }
+        
+        /* Mobile scrolling container */
+        .mobile-scroll-container {
+          height: auto;
+          overflow: visible;
+        }
+        
+        /* Ensure no parent containers clip the dropdown */
+        #daftar-tamu-content {
+          overflow: visible !important;
+        }
+        
+        #daftar-tamu-content .card {
+          overflow: visible !important;
+        }
+        
+        #daftar-tamu-content .card-body {
+          overflow: visible !important;
+        }
+        
+        /* Force dropdown to appear above card */
+        .export-controls-container {
+          position: relative;
+          z-index: 1001 !important;
+        }
+        
+        .export-controls-container .relative {
+          z-index: 1002 !important;
+        }
+        
+        .export-controls-container .relative div[x-show] {
+          z-index: 9999 !important;
+          position: absolute !important;
+        }
+        
+        /* Specific dropdown menu styling */
+        .dropdown-menu {
+          position: fixed !important;
+          z-index: 999999 !important;
+          background: white !important;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+          border: 1px solid #e5e7eb !important;
+          border-radius: 0.375rem !important;
+          min-width: 12rem !important;
+        }
+        
+        .dropdown-menu a {
+          display: block !important;
+          padding: 0.5rem 1rem !important;
+          color: #374151 !important;
+          text-decoration: none !important;
+        }
+        
+        .dropdown-menu a:hover {
+          background-color: #f3f4f6 !important;
+        }
+        
         @media (max-width: 768px) {
           .flex-wrap {
             flex-wrap: wrap;
@@ -53,6 +192,132 @@
           }
           .mr-1 {
             margin-right: 0.25rem;
+          }
+          
+          /* Mobile dropdown adjustments */
+          .relative div[x-show] {
+            position: fixed !important;
+            right: 1rem !important;
+            left: auto !important;
+            width: auto !important;
+            min-width: 200px;
+            z-index: 9999 !important;
+            top: auto !important;
+            margin-top: 0.5rem;
+          }
+          
+          /* Ensure buttons container has proper z-index */
+          .flex.flex-wrap.gap-2 {
+            position: relative;
+            z-index: 10;
+          }
+          
+          /* Mobile scrolling fixes */
+          .mobile-scroll-container {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            padding-bottom: 4rem !important;
+            margin-bottom: 2rem !important;
+          }
+          
+          .card {
+            margin-bottom: 1rem !important;
+            overflow: visible !important;
+          }
+          
+          .card-body {
+            overflow: visible !important;
+          }
+          
+          /* Fix table scrolling on mobile */
+          .table-responsive {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            margin: 0 -1rem !important;
+            padding: 0 1rem !important;
+          }
+          
+          .table-responsive table {
+            width: 100% !important;
+            white-space: nowrap !important;
+          }
+          
+          /* Pagination mobile fix */
+          .pagination-container {
+            margin-top: 1rem !important;
+            padding-bottom: 3rem !important;
+            margin-bottom: 2rem !important;
+            position: relative !important;
+            z-index: 1 !important;
+            background: #f3f4f6 !important;
+            padding-top: 1rem !important;
+          }
+          
+          /* Pagination navigation styling for mobile */
+          .pagination-container nav {
+            background: white !important;
+            padding: 1rem !important;
+            border-radius: 0.5rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            margin: 0 !important;
+          }
+          
+          /* Pagination links mobile responsive */
+          .pagination-container .relative.inline-flex.items-center {
+            padding: 0.5rem 0.75rem !important;
+            margin: 0 0.1rem !important;
+            font-size: 0.875rem !important;
+          }
+          
+          /* Ensure main content area is scrollable */
+          #main-content {
+            height: 100vh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          
+          /* Content padding adjustment */
+          #main-content .p-6 {
+            padding: 1rem !important;
+            height: calc(100vh - 80px) !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding-bottom: 4rem !important;
+          }
+          
+          /* Extra small screens (390px and below) */
+          @media (max-width: 390px) {
+            .mobile-scroll-container {
+              padding-bottom: 5rem !important;
+            }
+            
+            .pagination-container {
+              padding-bottom: 4rem !important;
+              margin-bottom: 3rem !important;
+            }
+            
+            .pagination-container nav {
+              padding: 0.75rem !important;
+            }
+            
+            .pagination-container .relative.inline-flex.items-center {
+              padding: 0.375rem 0.5rem !important;
+              font-size: 0.75rem !important;
+            }
+            
+            /* Ensure content doesn't get cut off */
+            #main-content .p-6 {
+              padding-bottom: 6rem !important;
+            }
+          }
+        }
+        
+        /* Desktop - ensure normal behavior */
+        @media (min-width: 769px) {
+          .mobile-scroll-container {
+            height: auto !important;
+            overflow: visible !important;
           }
         }
       </style>

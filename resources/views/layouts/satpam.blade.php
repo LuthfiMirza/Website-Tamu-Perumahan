@@ -227,6 +227,8 @@
             transition: all 0.3s ease;
             min-height: 100vh;
             background: #f3f4f6;
+            overflow-y: auto;
+            height: 100vh;
         }
 
         .main-content.expanded {
@@ -289,6 +291,9 @@
 
             .main-content {
                 margin-left: 0 !important;
+                height: 100vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .main-content.expanded {
@@ -297,6 +302,16 @@
 
             #sidebar-overlay {
                 transition: opacity 0.3s ease;
+            }
+
+            .app-container {
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            body {
+                height: 100vh;
+                overflow: hidden;
             }
         }
     </style>

@@ -40,7 +40,7 @@ class LogAktivitas extends Model
             'user_id' => $userId,
             'aktivitas' => self::AKTIVITAS_TAMBAH_TAMU,
             'deskripsi' => 'Menambahkan tamu baru: ' . $tamuData->jenis_tamu,
-            'waktu' => now(),
+            'waktu' => now('Asia/Jakarta'),
         ]);
     }
 
@@ -51,7 +51,7 @@ class LogAktivitas extends Model
             'user_id' => $userId,
             'aktivitas' => self::AKTIVITAS_LOGOUT_TAMU,
             'deskripsi' => 'Logout tamu: ' . $tamuData->jenis_tamu,
-            'waktu' => now(),
+            'waktu' => now('Asia/Jakarta'),
         ]);
     }
 
@@ -62,7 +62,7 @@ class LogAktivitas extends Model
             'user_id' => $userId,
             'aktivitas' => self::AKTIVITAS_EDIT_TAMU,
             'deskripsi' => 'Mengubah data tamu: ' . $tamuData->jenis_tamu,
-            'waktu' => now(),
+            'waktu' => now('Asia/Jakarta'),
         ]);
     }
 }
