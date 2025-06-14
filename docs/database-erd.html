@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database ERD - Sistem Administrasi Tamu</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .erd-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .table-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .table-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .table-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .table-card h3::before {
+            content: "🗃️";
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .field-list {
+            list-style: none;
+        }
+
+        .field-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .field-list li:last-child {
+            border-bottom: none;
+        }
+
+        .field-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .field-type {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .primary-key {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .foreign-key {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .unique-key {
+            background: #e8f5e8;
+            color: #388e3c;
+        }
+
+        .relations-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .relations-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .relation-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e74c3c;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .relation-item h4 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .relation-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-color.primary { background: #f57c00; }
+        .legend-color.foreign { background: #7b1fa2; }
+        .legend-color.unique { background: #388e3c; }
+        .legend-color.regular { background: #1976d2; }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                margin-bottom: 5px;
+            }
+            
+            .table-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .mermaid {
+            text-align: center;
+        }
+
+        /* Custom Mermaid Styling */
+        .mermaid .entityBox {
+            fill: #ffffff;
+            stroke: #3498db;
+            stroke-width: 2px;
+        }
+
+        .mermaid .attributeBoxEven {
+            fill: #f8f9fa;
+            stroke: #dee2e6;
+        }
+
+        .mermaid .attributeBoxOdd {
+            fill: #ffffff;
+            stroke: #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Database ERD</h1>
+            <p>Entity Relationship Diagram - Sistem Administrasi Tamu</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('erd')">ERD Diagram</button>
+                <button class="tab" onclick="showTab('tables')">Struktur Tabel</button>
+                <button class="tab" onclick="showTab('relations')">Relasi</button>
+                <button class="tab" onclick="showTab('statistics')">Statistik</button>
+            </div>
+
+            <!-- ERD Tab -->
+            <div id="erd" class="tab-content active">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color primary"></div>
+                        <span>Primary Key</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color foreign"></div>
+                        <span>Foreign Key</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color unique"></div>
+                        <span>Unique Key</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color regular"></div>
+                        <span>Regular Field</span>
+                    </div>
+                </div>
+
+                <div class="erd-container">
+                    <div class="mermaid">
+                        erDiagram
+                            USERS {
+                                bigint id PK
+                                string name
+                                string email UK
+                                timestamp email_verified_at
+                                string password
+                                string nama_role
+                                string phone
+                                string remember_token
+                                timestamp created_at
+                                timestamp updated_at
+                            }
+                            
+                            TAMU {
+                                bigint id PK
+                                string gambar
+                                string jenis_tamu
+                                date tanggal
+                                time jam_masuk
+                                time jam_keluar
+                                string posisi
+                                string tujuan
+                                string plat_nomor
+                                timestamp created_at
+                                timestamp updated_at
+                            }
+                            
+                            PENJADWALAN_SATPAM {
+                                bigint id PK
+                                string nama
+                                string senin
+                                string selasa
+                                string rabu
+                                string kamis
+                                string jumat
+                                string sabtu
+                                string minggu
+                                timestamp created_at
+                                timestamp updated_at
+                            }
+                            
+                            LOG_AKTIVITAS {
+                                bigint id PK
+                                string aktivitas
+                                string user_id FK
+                                text deskripsi
+                                timestamp waktu
+                                timestamp created_at
+                                timestamp updated_at
+                            }
+                            
+                            PERSONAL_ACCESS_TOKENS {
+                                bigint id PK
+                                string tokenable_type
+                                bigint tokenable_id
+                                string name
+                                string token UK
+                                text abilities
+                                timestamp last_used_at
+                                timestamp expires_at
+                                timestamp created_at
+                                timestamp updated_at
+                            }
+                            
+                            PASSWORD_RESET_TOKENS {
+                                string email PK
+                                string token
+                                timestamp created_at
+                            }
+                            
+                            FAILED_JOBS {
+                                bigint id PK
+                                string uuid UK
+                                text connection
+                                text queue
+                                longtext payload
+                                longtext exception
+                                timestamp failed_at
+                            }
+
+                            USERS ||--o{ LOG_AKTIVITAS : "creates"
+                            USERS ||--o{ PERSONAL_ACCESS_TOKENS : "has"
+                            USERS ||--o{ PASSWORD_RESET_TOKENS : "requests"
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Tab -->
+            <div id="tables" class="tab-content">
+                <input type="text" class="search-box" placeholder="🔍 Cari tabel atau field..." onkeyup="searchTables(this.value)">
+                
+                <div class="table-info" id="tableInfo">
+                    <div class="table-card" data-table="users">
+                        <h3>users</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">id</span><span class="field-type primary-key">BIGINT PK</span></li>
+                            <li><span class="field-name">name</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">email</span><span class="field-type unique-key">VARCHAR(255) UK</span></li>
+                            <li><span class="field-name">email_verified_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">password</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">nama_role</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">phone</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">remember_token</span><span class="field-type">VARCHAR(100)</span></li>
+                            <li><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">updated_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="table-card" data-table="tamu">
+                        <h3>tamu</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">id</span><span class="field-type primary-key">BIGINT PK</span></li>
+                            <li><span class="field-name">gambar</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">jenis_tamu</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">tanggal</span><span class="field-type">DATE</span></li>
+                            <li><span class="field-name">jam_masuk</span><span class="field-type">TIME</span></li>
+                            <li><span class="field-name">jam_keluar</span><span class="field-type">TIME</span></li>
+                            <li><span class="field-name">posisi</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">tujuan</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">plat_nomor</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">updated_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="table-card" data-table="penjadwalan_satpam">
+                        <h3>penjadwalan_satpam</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">id</span><span class="field-type primary-key">BIGINT PK</span></li>
+                            <li><span class="field-name">nama</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">senin</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">selasa</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">rabu</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">kamis</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">jumat</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">sabtu</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">minggu</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">updated_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="table-card" data-table="log_aktivitas">
+                        <h3>log_aktivitas</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">id</span><span class="field-type primary-key">BIGINT PK</span></li>
+                            <li><span class="field-name">aktivitas</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">user_id</span><span class="field-type foreign-key">VARCHAR(255) FK</span></li>
+                            <li><span class="field-name">deskripsi</span><span class="field-type">TEXT</span></li>
+                            <li><span class="field-name">waktu</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">updated_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="table-card" data-table="personal_access_tokens">
+                        <h3>personal_access_tokens</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">id</span><span class="field-type primary-key">BIGINT PK</span></li>
+                            <li><span class="field-name">tokenable_type</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">tokenable_id</span><span class="field-type">BIGINT</span></li>
+                            <li><span class="field-name">name</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">token</span><span class="field-type unique-key">VARCHAR(64) UK</span></li>
+                            <li><span class="field-name">abilities</span><span class="field-type">TEXT</span></li>
+                            <li><span class="field-name">last_used_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">expires_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span></li>
+                            <li><span class="field-name">updated_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="table-card" data-table="password_reset_tokens">
+                        <h3>password_reset_tokens</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">email</span><span class="field-type primary-key">VARCHAR(255) PK</span></li>
+                            <li><span class="field-name">token</span><span class="field-type">VARCHAR(255)</span></li>
+                            <li><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="table-card" data-table="failed_jobs">
+                        <h3>failed_jobs</h3>
+                        <ul class="field-list">
+                            <li><span class="field-name">id</span><span class="field-type primary-key">BIGINT PK</span></li>
+                            <li><span class="field-name">uuid</span><span class="field-type unique-key">VARCHAR(255) UK</span></li>
+                            <li><span class="field-name">connection</span><span class="field-type">TEXT</span></li>
+                            <li><span class="field-name">queue</span><span class="field-type">TEXT</span></li>
+                            <li><span class="field-name">payload</span><span class="field-type">LONGTEXT</span></li>
+                            <li><span class="field-name">exception</span><span class="field-type">LONGTEXT</span></li>
+                            <li><span class="field-name">failed_at</span><span class="field-type">TIMESTAMP</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relations Tab -->
+            <div id="relations" class="tab-content">
+                <div class="relations-section">
+                    <h2>🔗 Relasi Antar Tabel</h2>
+                    
+                    <div class="relation-item">
+                        <h4>Users → Log Aktivitas</h4>
+                        <p><strong>Tipe:</strong> One to Many</p>
+                        <p><strong>Foreign Key:</strong> log_aktivitas.user_id → users.id</p>
+                        <p><strong>Deskripsi:</strong> Satu pengguna dapat memiliki banyak log aktivitas. Setiap aktivitas yang dilakukan pengguna akan tercatat dalam tabel log_aktivitas.</p>
+                    </div>
+
+                    <div class="relation-item">
+                        <h4>Users → Personal Access Tokens</h4>
+                        <p><strong>Tipe:</strong> One to Many (Polymorphic)</p>
+                        <p><strong>Foreign Key:</strong> personal_access_tokens.tokenable_id → users.id</p>
+                        <p><strong>Deskripsi:</strong> Satu pengguna dapat memiliki banyak token akses personal untuk autentikasi API. Relasi ini menggunakan polymorphic relationship.</p>
+                    </div>
+
+                    <div class="relation-item">
+                        <h4>Users → Password Reset Tokens</h4>
+                        <p><strong>Tipe:</strong> One to Many</p>
+                        <p><strong>Foreign Key:</strong> password_reset_tokens.email → users.email</p>
+                        <p><strong>Deskripsi:</strong> Satu pengguna dapat memiliki token reset password. Token ini digunakan untuk proses reset password melalui email.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div id="statistics" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>7</h3>
+                        <p>Total Tabel</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>3</h3>
+                        <p>Relasi Aktif</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>7</h3>
+                        <p>Primary Keys</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>3</h3>
+                        <p>Unique Keys</p>
+                    </div>
+                </div>
+
+                <div class="relations-section">
+                    <h2>📈 Analisis Database</h2>
+                    
+                    <div class="relation-item">
+                        <h4>Tabel Utama</h4>
+                        <p>Tabel <strong>users</strong>, <strong>tamu</strong>, dan <strong>penjadwalan_satpam</strong> merupakan tabel utama yang menyimpan data bisnis inti aplikasi.</p>
+                    </div>
+
+                    <div class="relation-item">
+                        <h4>Tabel Pendukung</h4>
+                        <p>Tabel <strong>log_aktivitas</strong> berfungsi sebagai audit trail, sedangkan <strong>personal_access_tokens</strong> dan <strong>password_reset_tokens</strong> mendukung sistem autentikasi.</p>
+                    </div>
+
+                    <div class="relation-item">
+                        <h4>Tabel Sistem</h4>
+                        <p>Tabel <strong>failed_jobs</strong> merupakan tabel sistem Laravel untuk menangani job queue yang gagal dieksekusi.</p>
+                    </div>
+
+                    <div class="relation-item">
+                        <h4>Rekomendasi Optimasi</h4>
+                        <p>Pertimbangkan untuk menambahkan index pada field yang sering digunakan untuk pencarian seperti <code>tamu.tanggal</code>, <code>tamu.jenis_tamu</code>, dan <code>log_aktivitas.waktu</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#3498db',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#3498db',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa'
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Search functionality
+        function searchTables(searchTerm) {
+            const tableCards = document.querySelectorAll('.table-card');
+            const searchLower = searchTerm.toLowerCase();
+
+            tableCards.forEach(card => {
+                const tableName = card.getAttribute('data-table').toLowerCase();
+                const fieldNames = Array.from(card.querySelectorAll('.field-name'))
+                    .map(field => field.textContent.toLowerCase());
+                
+                const matchesTable = tableName.includes(searchLower);
+                const matchesField = fieldNames.some(field => field.includes(searchLower));
+
+                if (matchesTable || matchesField || searchTerm === '') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading animation
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

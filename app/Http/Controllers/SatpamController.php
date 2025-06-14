@@ -28,6 +28,15 @@ class SatpamController extends Controller
             $query->whereDate('tanggal', $today);
         }
         
+        // Filter pencarian plat nomor atau jenis tamu
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function($sub) use ($q) {
+                $sub->where('plat_nomor', 'like', "%$q%")
+                    ->orWhere('jenis_tamu', 'like', "%$q%");
+            });
+        }
+        
         // Ambil data tamu dan urutkan berdasarkan tanggal terbaru
         $daftarTamu = $query->orderBy('tanggal', 'desc')
                            ->orderBy('jam_masuk', 'desc')

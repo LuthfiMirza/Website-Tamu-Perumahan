@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Diagrams - Fitur Masa Depan Sistem Admin Tamu</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 15px;
+            font-size: 2.5em;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.3em;
+        }
+        .diagram-container {
+            margin: 25px 0;
+            padding: 25px;
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            background: #fef9f9;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.1);
+        }
+        .mermaid {
+            text-align: center;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .description {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 18px;
+            border-left: 5px solid #e17055;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-weight: 500;
+        }
+        .nav {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            border-radius: 15px 15px 0 0;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.1);
+        }
+        .nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        .toc {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 2px solid #00b894;
+        }
+        .toc h3 {
+            color: #2d3436;
+            margin-top: 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 10px 0;
+        }
+        .toc a {
+            color: #2d3436;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+        }
+        .toc a:hover {
+            background: rgba(255,255,255,0.6);
+            transform: translateX(5px);
+        }
+        .priority-high {
+            border-left: 5px solid #e74c3c;
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffcccb 100%);
+        }
+        .priority-medium {
+            border-left: 5px solid #f39c12;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+        .priority-low {
+            border-left: 5px solid #27ae60;
+            background: linear-gradient(135deg, #d4edda 0%, #a8e6cf 100%);
+        }
+        .feature-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .badge-high { background: #e74c3c; color: white; }
+        .badge-medium { background: #f39c12; color: white; }
+        .badge-low { background: #27ae60; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="#warga">Manajemen Warga</a>
+            <a href="#persetujuan">Persetujuan Tamu</a>
+            <a href="#notifikasi">Notifikasi</a>
+            <a href="#fasilitas">Fasilitas</a>
+            <a href="#emergency">Emergency</a>
+        </div>
+
+        <h1>🚀 Activity Diagrams - Fitur Masa Depan</h1>
+        
+        <div class="description">
+            <strong>Dokumen ini berisi activity diagram untuk fitur-fitur yang direkomendasikan untuk dikembangkan pada sistem admin tamu perumahan. Setiap fitur diberi prioritas pengembangan.</strong>
+        </div>
+
+        <div class="toc">
+            <h3>🎯 Daftar Fitur Masa Depan</h3>
+            <ul>
+                <li><a href="#registrasi-warga">1. Registrasi Warga Baru</a> <span class="feature-badge badge-high">HIGH</span></li>
+                <li><a href="#persetujuan-tamu">2. Persetujuan Tamu oleh Warga</a> <span class="feature-badge badge-high">HIGH</span></li>
+                <li><a href="#qr-verification">3. Verifikasi QR Code</a> <span class="feature-badge badge-high">HIGH</span></li>
+                <li><a href="#realtime-notif">4. Notifikasi Real-time</a> <span class="feature-badge badge-high">HIGH</span></li>
+                <li><a href="#booking-fasilitas">5. Booking Fasilitas</a> <span class="feature-badge badge-medium">MEDIUM</span></li>
+                <li><a href="#komplain">6. Manajemen Komplain</a> <span class="feature-badge badge-medium">MEDIUM</span></li>
+                <li><a href="#emergency-alert">7. Emergency Alert</a> <span class="feature-badge badge-medium">MEDIUM</span></li>
+                <li><a href="#mobile-sync">8. Mobile App Sync</a> <span class="feature-badge badge-low">LOW</span></li>
+                <li><a href="#backup">9. Backup & Restore</a> <span class="feature-badge badge-low">LOW</span></li>
+                <li><a href="#analytics">10. Analytics & Reporting</a> <span class="feature-badge badge-medium">MEDIUM</span></li>
+            </ul>
+        </div>
+
+        <section id="warga">
+            <h2 id="registrasi-warga">1. 🏠 Registrasi Warga Baru <span class="feature-badge badge-high">HIGH PRIORITY</span></h2>
+            <div class="diagram-container priority-high">
+                <div class="description">
+                    <strong>Fitur Fundamental:</strong> Sistem registrasi warga baru dengan validasi data, pengecekan ketersediaan rumah, dan pembuatan akun otomatis.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Admin Klik Tambah Warga]
+                        B --> C[Buka Form Registrasi Warga]
+                        C --> D[Input Data Pribadi]
+                        D --> E[Input Nomor Rumah/Blok]
+                        E --> F[Input Kontak]
+                        F --> G[Upload Foto KTP]
+                        G --> H[Set Status Warga]
+                        H --> I[Klik Submit]
+                        I --> J{Validasi Data}
+                        J -->|Invalid| K[Tampilkan Error]
+                        K --> D
+                        J -->|Valid| L{Nomor Rumah Tersedia?}
+                        L -->|No| M[Error: Rumah Sudah Terisi]
+                        M --> E
+                        L -->|Yes| N[Simpan Data Warga]
+                        N --> O[Generate User Account]
+                        O --> P[Send Welcome Email]
+                        P --> Q[Catat Log Aktivitas]
+                        Q --> R[Tampilkan Success Message]
+                        R --> S[End]
+                </div>
+            </div>
+
+            <h2 id="persetujuan-tamu">2. ✅ Persetujuan Tamu oleh Warga <span class="feature-badge badge-high">HIGH PRIORITY</span></h2>
+            <div class="diagram-container priority-high">
+                <div class="description">
+                    <strong>Core Feature:</strong> Sistem pre-approval tamu oleh warga dengan QR code generation dan notifikasi ke satpam.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Warga Login ke System]
+                        B --> C[Klik Daftarkan Tamu]
+                        C --> D[Input Data Tamu]
+                        D --> E[Input Nama Tamu]
+                        E --> F[Input Nomor Telepon]
+                        F --> G[Pilih Tanggal Kunjungan]
+                        G --> H[Set Jam Kunjungan]
+                        H --> I[Input Keperluan]
+                        I --> J[Klik Submit]
+                        J --> K{Validasi Data}
+                        K -->|Invalid| L[Tampilkan Error]
+                        L --> D
+                        K -->|Valid| M[Simpan Persetujuan]
+                        M --> N[Generate QR Code]
+                        N --> O[Send QR ke Tamu via SMS/WA]
+                        O --> P[Notifikasi ke Satpam]
+                        P --> Q[Catat Log Aktivitas]
+                        Q --> R[Tampilkan Success & QR Code]
+                        R --> S[End]
+                </div>
+            </div>
+
+            <h2 id="qr-verification">3. 📱 Verifikasi Tamu dengan QR Code <span class="feature-badge badge-high">HIGH PRIORITY</span></h2>
+            <div class="diagram-container priority-high">
+                <div class="description">
+                    <strong>Security Enhancement:</strong> Verifikasi tamu menggunakan QR code dengan validasi waktu dan auto-fill form.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Tamu Tiba di Gerbang]
+                        B --> C[Tamu Tunjukkan QR Code]
+                        C --> D[Satpam Scan QR Code]
+                        D --> E{QR Code Valid?}
+                        E -->|No| F[Tampilkan Error]
+                        F --> G[Tamu Hubungi Warga]
+                        G --> H[Manual Verification]
+                        E -->|Yes| I[Load Data Persetujuan]
+                        I --> J{Tanggal/Jam Sesuai?}
+                        J -->|No| K[Tampilkan Peringatan]
+                        K --> L[Konfirmasi Manual]
+                        J -->|Yes| M[Auto Fill Form Tamu]
+                        L --> M
+                        H --> M
+                        M --> N[Ambil Foto Tamu]
+                        N --> O[Input Plat Nomor]
+                        O --> P[Konfirmasi Entry]
+                        P --> Q[Simpan Data Tamu]
+                        Q --> R[Update Status Persetujuan]
+                        R --> S[Notifikasi ke Warga]
+                        S --> T[Catat Log Aktivitas]
+                        T --> U[End]
+                </div>
+            </div>
+        </section>
+
+        <section id="notifikasi">
+            <h2 id="realtime-notif">4. 🔔 Notifikasi Real-time <span class="feature-badge badge-high">HIGH PRIORITY</span></h2>
+            <div class="diagram-container priority-high">
+                <div class="description">
+                    <strong>User Experience:</strong> Sistem notifikasi real-time menggunakan WebSocket untuk berbagai event dalam sistem.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Event Triggered] --> B{Event Type}
+                        B -->|Tamu Masuk| C[Prepare Tamu Masuk Notification]
+                        B -->|Tamu Keluar| D[Prepare Tamu Keluar Notification]
+                        B -->|Emergency| E[Prepare Emergency Alert]
+                        B -->|System Alert| F[Prepare System Notification]
+                        
+                        C --> G[Get Warga Data]
+                        D --> G
+                        E --> H[Get All Users]
+                        F --> I[Get Admin Users]
+                        
+                        G --> J[Send to Specific Warga]
+                        H --> K[Broadcast to All]
+                        I --> L[Send to Admins]
+                        
+                        J --> M[Push via WebSocket]
+                        K --> M
+                        L --> M
+                        
+                        M --> N[Send Email/SMS if Critical]
+                        N --> O[Log Notification]
+                        O --> P[Update Notification Status]
+                        P --> Q[End]
+                </div>
+            </div>
+        </section>
+
+        <section id="fasilitas">
+            <h2 id="booking-fasilitas">5. 🏊 Booking Fasilitas <span class="feature-badge badge-medium">MEDIUM PRIORITY</span></h2>
+            <div class="diagram-container priority-medium">
+                <div class="description">
+                    <strong>Community Feature:</strong> Sistem booking fasilitas umum perumahan dengan manajemen slot waktu dan pembayaran.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Warga Login]
+                        B --> C[Pilih Menu Booking Fasilitas]
+                        C --> D[Lihat Fasilitas Tersedia]
+                        D --> E[Pilih Fasilitas]
+                        E --> F[Pilih Tanggal]
+                        F --> G[Pilih Jam]
+                        G --> H{Slot Tersedia?}
+                        H -->|No| I[Tampilkan Slot Alternatif]
+                        I --> G
+                        H -->|Yes| J[Input Keperluan]
+                        J --> K[Konfirmasi Booking]
+                        K --> L[Proses Pembayaran jika ada]
+                        L --> M{Pembayaran Berhasil?}
+                        M -->|No| N[Tampilkan Error Payment]
+                        N --> L
+                        M -->|Yes| O[Simpan Booking]
+                        O --> P[Generate Booking Code]
+                        P --> Q[Send Konfirmasi]
+                        Q --> R[Notifikasi ke Admin]
+                        R --> S[Catat Log Aktivitas]
+                        S --> T[End]
+                </div>
+            </div>
+
+            <h2 id="komplain">6. 📝 Manajemen Komplain <span class="feature-badge badge-medium">MEDIUM PRIORITY</span></h2>
+            <div class="diagram-container priority-medium">
+                <div class="description">
+                    <strong>Service Management:</strong> Sistem ticketing untuk komplain warga dengan tracking status dan assignment.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Warga Login]
+                        B --> C[Klik Buat Komplain]
+                        C --> D[Pilih Kategori Komplain]
+                        D --> E[Input Deskripsi]
+                        E --> F[Upload Foto opsional]
+                        F --> G[Set Prioritas]
+                        G --> H[Submit Komplain]
+                        H --> I[Generate Ticket Number]
+                        I --> J[Assign ke Admin/Teknisi]
+                        J --> K[Send Notifikasi ke Assignee]
+                        K --> L[Update Status: Open]
+                        L --> M[Catat Log]
+                        M --> N{Admin Response}
+                        N -->|In Progress| O[Update Status: In Progress]
+                        N -->|Need Info| P[Request Additional Info]
+                        N -->|Resolved| Q[Update Status: Resolved]
+                        O --> R[Notifikasi ke Warga]
+                        P --> R
+                        Q --> S[Request Warga Confirmation]
+                        R --> T{Warga Satisfied?}
+                        S --> T
+                        T -->|No| U[Reopen Ticket]
+                        U --> N
+                        T -->|Yes| V[Close Ticket]
+                        V --> W[End]
+                </div>
+            </div>
+        </section>
+
+        <section id="emergency">
+            <h2 id="emergency-alert">7. 🚨 Emergency Alert System <span class="feature-badge badge-medium">MEDIUM PRIORITY</span></h2>
+            <div class="diagram-container priority-medium">
+                <div class="description">
+                    <strong>Safety Feature:</strong> Sistem alert darurat dengan broadcast notification dan protokol emergency.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Emergency Detected] --> B{Emergency Type}
+                        B -->|Manual Trigger| C[User Clicks Panic Button]
+                        B -->|System Trigger| D[Sensor/System Alert]
+                        B -->|Security Breach| E[Unauthorized Access]
+                        
+                        C --> F[Confirm Emergency]
+                        D --> G[Auto Validate Alert]
+                        E --> G
+                        
+                        F --> H{Confirmed?}
+                        H -->|No| I[Cancel Alert]
+                        H -->|Yes| J[Activate Emergency Protocol]
+                        G --> J
+                        
+                        J --> K[Send Alert to All Users]
+                        K --> L[Notify Security Team]
+                        L --> M[Notify Management]
+                        M --> N[Log Emergency Event]
+                        N --> O[Activate Emergency Procedures]
+                        O --> P[Monitor Response]
+                        P --> Q{Emergency Resolved?}
+                        Q -->|No| R[Escalate Alert]
+                        R --> P
+                        Q -->|Yes| S[Deactivate Alert]
+                        S --> T[Send All Clear]
+                        T --> U[Log Resolution]
+                        U --> V[End]
+                        
+                        I --> W[End]
+                </div>
+            </div>
+        </section>
+
+        <section id="mobile-sync">
+            <h2 id="mobile-sync">8. 📱 Mobile App Sync <span class="feature-badge badge-low">LOW PRIORITY</span></h2>
+            <div class="diagram-container priority-low">
+                <div class="description">
+                    <strong>Accessibility:</strong> Sinkronisasi data untuk mobile app dengan offline capability dan real-time updates.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Mobile App Opened] --> B[Check Network Connection]
+                        B --> C{Connected?}
+                        C -->|No| D[Show Offline Mode]
+                        D --> E[Load Cached Data]
+                        C -->|Yes| F[Authenticate User]
+                        F --> G{Auth Success?}
+                        G -->|No| H[Show Login Screen]
+                        G -->|Yes| I[Sync Data]
+                        I --> J[Download New Data]
+                        J --> K[Upload Pending Changes]
+                        K --> L[Update Local Cache]
+                        L --> M[Refresh UI]
+                        M --> N[Enable Real-time Updates]
+                        N --> O{New Data Available?}
+                        O -->|Yes| P[Push Notification]
+                        P --> Q[Update UI]
+                        O -->|No| R[Wait for Changes]
+                        Q --> R
+                        R --> S{App Active?}
+                        S -->|Yes| O
+                        S -->|No| T[Background Sync]
+                        T --> U[End]
+                        E --> V[Limited Functionality]
+                        V --> U
+                        H --> W[User Login]
+                        W --> F
+                </div>
+            </div>
+
+            <h2 id="backup">9. 💾 Data Backup & Restore <span class="feature-badge badge-low">LOW PRIORITY</span></h2>
+            <div class="diagram-container priority-low">
+                <div class="description">
+                    <strong>Data Protection:</strong> Sistem backup otomatis dengan verifikasi integritas dan cloud storage.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Scheduled Backup Time] --> B[Check System Status]
+                        B --> C{System Busy?}
+                        C -->|Yes| D[Wait 5 Minutes]
+                        D --> B
+                        C -->|No| E[Start Backup Process]
+                        E --> F[Lock Database]
+                        F --> G[Export Database]
+                        G --> H[Backup Files]
+                        H --> I[Compress Backup]
+                        I --> J[Upload to Cloud Storage]
+                        J --> K{Upload Success?}
+                        K -->|No| L[Retry Upload]
+                        L --> M{Max Retries?}
+                        M -->|No| J
+                        M -->|Yes| N[Log Backup Failure]
+                        K -->|Yes| O[Verify Backup Integrity]
+                        O --> P{Backup Valid?}
+                        P -->|No| Q[Log Corruption Error]
+                        P -->|Yes| R[Update Backup Log]
+                        R --> S[Clean Old Backups]
+                        S --> T[Unlock Database]
+                        T --> U[Send Success Notification]
+                        U --> V[End]
+                        
+                        N --> T
+                        Q --> T
+                </div>
+            </div>
+
+            <h2 id="analytics">10. 📊 Analytics & Reporting <span class="feature-badge badge-medium">MEDIUM PRIORITY</span></h2>
+            <div class="diagram-container priority-medium">
+                <div class="description">
+                    <strong>Business Intelligence:</strong> Sistem analytics dan reporting dengan berbagai format export dan dashboard insights.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Generate Report Request] --> B{Report Type}
+                        B -->|Daily| C[Collect Daily Data]
+                        B -->|Weekly| D[Collect Weekly Data]
+                        B -->|Monthly| E[Collect Monthly Data]
+                        B -->|Custom| F[Collect Custom Range Data]
+                        
+                        C --> G[Process Visitor Stats]
+                        D --> G
+                        E --> G
+                        F --> G
+                        
+                        G --> H[Calculate Peak Hours]
+                        H --> I[Analyze Visitor Types]
+                        I --> J[Generate Trends]
+                        J --> K[Create Charts/Graphs]
+                        K --> L{Export Format}
+                        L -->|PDF| M[Generate PDF Report]
+                        L -->|Excel| N[Generate Excel Report]
+                        L -->|Dashboard| O[Update Dashboard]
+                        
+                        M --> P[Email Report]
+                        N --> P
+                        O --> Q[Refresh Analytics]
+                        
+                        P --> R[Log Report Generation]
+                        Q --> R
+                        R --> S[End]
+                </div>
+            </div>
+        </section>
+
+        <div style="margin-top: 50px; padding: 25px; background: linear-gradient(135deg, #2d3436 0%, #636e72 100%); color: white; border-radius: 10px; text-align: center;">
+            <h3>🎯 Roadmap Pengembangan</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(231, 76, 60, 0.2); padding: 15px; border-radius: 8px; border: 2px solid #e74c3c;">
+                    <h4 style="color: #e74c3c; margin-top: 0;">🔴 HIGH PRIORITY</h4>
+                    <ul style="text-align: left; padding-left: 20px;">
+                        <li>Manajemen Warga</li>
+                        <li>Sistem Persetujuan Tamu</li>
+                        <li>Verifikasi QR Code</li>
+                        <li>Notifikasi Real-time</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(243, 156, 18, 0.2); padding: 15px; border-radius: 8px; border: 2px solid #f39c12;">
+                    <h4 style="color: #f39c12; margin-top: 0;">🟡 MEDIUM PRIORITY</h4>
+                    <ul style="text-align: left; padding-left: 20px;">
+                        <li>Booking Fasilitas</li>
+                        <li>Manajemen Komplain</li>
+                        <li>Emergency Alert</li>
+                        <li>Analytics & Reporting</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(39, 174, 96, 0.2); padding: 15px; border-radius: 8px; border: 2px solid #27ae60;">
+                    <h4 style="color: #27ae60; margin-top: 0;">🟢 LOW PRIORITY</h4>
+                    <ul style="text-align: left; padding-left: 20px;">
+                        <li>Mobile App Sync</li>
+                        <li>Data Backup & Restore</li>
+                        <li>Advanced Security</li>
+                        <li>Integration Features</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top: 25px; font-size: 1.1em;"><strong>Implementasi bertahap berdasarkan prioritas akan memastikan pengembangan yang efektif dan sesuai kebutuhan pengguna.</strong></p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -21,6 +21,10 @@
             <h2>Daftar Tamu</h2>
         </div>
         <div class="card-body">
+        <form method="GET" action="" class="mb-4 flex flex-col md:flex-row gap-2 md:items-center">
+          <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari plat nomor atau jenis tamu..." class="form-input w-full md:w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button type="submit" class="btn btn-primary px-4 py-2 rounded-md text-white font-medium hover:bg-blue-700 transition-colors">Cari</button>
+        </form>
         <div class="export-controls-container flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-2 md:space-y-0">
         <div class="flex flex-wrap gap-2">
           <a href="{{ route('satpam.daftar-tamu') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium">Semua Data</a>
@@ -425,6 +429,7 @@
             z-index: 1;
           }
           
+          
           .flex-wrap {
             flex-wrap: wrap;
           }
@@ -446,6 +451,8 @@
             margin-right: 0.25rem;
           }
         }
+
+        
       </style>
       
       <!-- Pagination -->

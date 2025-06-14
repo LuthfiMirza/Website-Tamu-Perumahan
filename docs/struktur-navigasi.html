@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur Navigasi - Sistem Administrasi Tamu</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 150px;
+        }
+
+        .tab.active {
+            background: #f39c12;
+            color: white;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .navigation-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #f39c12;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .nav-card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-card h3::before {
+            content: "🧭";
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-list li:last-child {
+            border-bottom: none;
+        }
+
+        .nav-item {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .nav-url {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .nav-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .mermaid {
+            text-align: center;
+        }
+
+        .breadcrumb-example {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #27ae60;
+        }
+
+        .breadcrumb-example h3 {
+            color: #27ae60;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .breadcrumb-item {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb-separator {
+            color: #666;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .route-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .route-table th,
+        .route-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .route-table th {
+            background: #f39c12;
+            color: white;
+            font-weight: 600;
+        }
+
+        .route-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .method-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .method-get { background: #27ae60; }
+        .method-post { background: #3498db; }
+        .method-put { background: #f39c12; }
+        .method-delete { background: #e74c3c; }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                margin-bottom: 5px;
+            }
+            
+            .navigation-info {
+                grid-template-columns: 1fr;
+            }
+
+            .route-table {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧭 Struktur Navigasi</h1>
+            <p>Peta Navigasi Sistem Administrasi Tamu</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('sitemap')">Site Map</button>
+                <button class="tab" onclick="showTab('admin-nav')">Admin Navigation</button>
+                <button class="tab" onclick="showTab('satpam-nav')">Satpam Navigation</button>
+                <button class="tab" onclick="showTab('routes')">Routes</button>
+            </div>
+
+            <!-- Site Map Tab -->
+            <div id="sitemap" class="tab-content active">
+                <div class="diagram-container">
+                    <div class="mermaid">
+                        graph TD
+                            A[🏠 Home] --> B[👤 Login]
+                            B --> C{Role Check}
+                            C -->|Admin| D[📊 Admin Dashboard]
+                            C -->|Satpam| E[🛡️ Satpam Dashboard]
+                            
+                            D --> F[👥 Kelola User]
+                            D --> G[👤 Kelola Tamu]
+                            D --> H[📅 Penjadwalan Satpam]
+                            D --> I[📋 Log Aktivitas]
+                            D --> J[📈 Laporan]
+                            
+                            E --> K[➕ Tambah Tamu]
+                            E --> L[📋 Daftar Tamu]
+                            E --> M[📅 Jadwal Satpam]
+                            E --> N[🚪 Logout]
+                            
+                            F --> F1[➕ Tambah User]
+                            F --> F2[✏️ Edit User]
+                            F --> F3[🗑️ Hapus User]
+                            
+                            G --> G1[➕ Tambah Tamu]
+                            G --> G2[✏️ Edit Tamu]
+                            G --> G3[🗑️ Hapus Tamu]
+                            G --> G4[👁️ Detail Tamu]
+                            
+                            H --> H1[➕ Tambah Jadwal]
+                            H --> H2[✏️ Edit Jadwal]
+                            H --> H3[🗑️ Hapus Jadwal]
+                            
+                            K --> K1[📷 Upload Foto]
+                            K --> K2[📝 Input Data]
+                            K --> K3[💾 Simpan]
+                            
+                            L --> L1[🔍 Filter Tamu]
+                            L --> L2[📊 Export Data]
+                            L --> L3[👁️ Detail Tamu]
+                            
+                            style A fill:#3498db
+                            style D fill:#e74c3c
+                            style E fill:#27ae60
+                            style C fill:#f39c12
+                    </div>
+                </div>
+
+                <div class="breadcrumb-example">
+                    <h3>Contoh Breadcrumb Navigation</h3>
+                    
+                    <div class="breadcrumb">
+                        <a href="#" class="breadcrumb-item">Home</a>
+                        <span class="breadcrumb-separator">></span>
+                        <a href="#" class="breadcrumb-item">Admin</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span class="breadcrumb-current">Dashboard</span>
+                    </div>
+
+                    <div class="breadcrumb">
+                        <a href="#" class="breadcrumb-item">Home</a>
+                        <span class="breadcrumb-separator">></span>
+                        <a href="#" class="breadcrumb-item">Admin</a>
+                        <span class="breadcrumb-separator">></span>
+                        <a href="#" class="breadcrumb-item">Kelola Tamu</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span class="breadcrumb-current">Tambah Tamu</span>
+                    </div>
+
+                    <div class="breadcrumb">
+                        <a href="#" class="breadcrumb-item">Home</a>
+                        <span class="breadcrumb-separator">></span>
+                        <a href="#" class="breadcrumb-item">Satpam</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span class="breadcrumb-current">Daftar Tamu</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Navigation Tab -->
+            <div id="admin-nav" class="tab-content">
+                <div class="navigation-info">
+                    <div class="nav-card">
+                        <h3>Dashboard Admin</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">📊 Dashboard</div>
+                                    <div class="nav-description">Halaman utama admin dengan statistik</div>
+                                </div>
+                                <span class="nav-url">/admin</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">📈 Statistik Tamu</div>
+                                    <div class="nav-description">Widget statistik kunjungan tamu</div>
+                                </div>
+                                <span class="nav-url">/admin/widgets</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Manajemen User</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">👥 Daftar User</div>
+                                    <div class="nav-description">Kelola semua pengguna sistem</div>
+                                </div>
+                                <span class="nav-url">/admin/users</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">➕ Tambah User</div>
+                                    <div class="nav-description">Form tambah pengguna baru</div>
+                                </div>
+                                <span class="nav-url">/admin/users/create</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">✏️ Edit User</div>
+                                    <div class="nav-description">Form edit data pengguna</div>
+                                </div>
+                                <span class="nav-url">/admin/users/{id}/edit</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Manajemen Tamu</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">👤 Daftar Tamu</div>
+                                    <div class="nav-description">Kelola data tamu dan kunjungan</div>
+                                </div>
+                                <span class="nav-url">/admin/tamus</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">➕ Tambah Tamu</div>
+                                    <div class="nav-description">Form registrasi tamu baru</div>
+                                </div>
+                                <span class="nav-url">/admin/tamus/create</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">👁️ Detail Tamu</div>
+                                    <div class="nav-description">Informasi lengkap tamu</div>
+                                </div>
+                                <span class="nav-url">/admin/tamus/{id}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Penjadwalan</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">📅 Jadwal Satpam</div>
+                                    <div class="nav-description">Kelola jadwal kerja satpam</div>
+                                </div>
+                                <span class="nav-url">/admin/penjadwalan-satpams</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">➕ Buat Jadwal</div>
+                                    <div class="nav-description">Form penjadwalan baru</div>
+                                </div>
+                                <span class="nav-url">/admin/penjadwalan-satpams/create</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Monitoring</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">📋 Log Aktivitas</div>
+                                    <div class="nav-description">Riwayat aktivitas sistem</div>
+                                </div>
+                                <span class="nav-url">/admin/log-aktivitas</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">📊 Laporan</div>
+                                    <div class="nav-description">Generate laporan sistem</div>
+                                </div>
+                                <span class="nav-url">/admin/reports</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Satpam Navigation Tab -->
+            <div id="satpam-nav" class="tab-content">
+                <div class="navigation-info">
+                    <div class="nav-card">
+                        <h3>Dashboard Satpam</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">🛡️ Dashboard</div>
+                                    <div class="nav-description">Halaman utama satpam</div>
+                                </div>
+                                <span class="nav-url">/satpam/dashboard</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">📊 Statistik Hari Ini</div>
+                                    <div class="nav-description">Ringkasan tamu hari ini</div>
+                                </div>
+                                <span class="nav-url">/satpam/dashboard#stats</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Manajemen Tamu</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">➕ Tambah Tamu</div>
+                                    <div class="nav-description">Form registrasi tamu masuk</div>
+                                </div>
+                                <span class="nav-url">/satpam/tambah-tamu</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">📋 Daftar Tamu</div>
+                                    <div class="nav-description">List tamu yang berkunjung</div>
+                                </div>
+                                <span class="nav-url">/satpam/daftar-tamu</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">🔍 Cari Tamu</div>
+                                    <div class="nav-description">Pencarian data tamu</div>
+                                </div>
+                                <span class="nav-url">/satpam/daftar-tamu?search=</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Jadwal & Info</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">📅 Jadwal Satpam</div>
+                                    <div class="nav-description">Lihat jadwal kerja</div>
+                                </div>
+                                <span class="nav-url">/satpam/jadwal-satpam</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">📋 Jadwal Hari Ini</div>
+                                    <div class="nav-description">Jadwal kerja hari ini</div>
+                                </div>
+                                <span class="nav-url">/satpam/jadwal-satpam#today</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-card">
+                        <h3>Autentikasi</h3>
+                        <ul class="nav-list">
+                            <li>
+                                <div>
+                                    <div class="nav-item">🔐 Login</div>
+                                    <div class="nav-description">Halaman login satpam</div>
+                                </div>
+                                <span class="nav-url">/satpam/login</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <div class="nav-item">🚪 Logout</div>
+                                    <div class="nav-description">Keluar dari sistem</div>
+                                </div>
+                                <span class="nav-url">/satpam/logout</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Routes Tab -->
+            <div id="routes" class="tab-content">
+                <div class="nav-card">
+                    <h3>Daftar Routes Sistem</h3>
+                    <table class="route-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>URI</th>
+                                <th>Name</th>
+                                <th>Controller</th>
+                                <th>Middleware</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/</td>
+                                <td>home</td>
+                                <td>HomeController@index</td>
+                                <td>web</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/admin</td>
+                                <td>filament.admin.pages.dashboard</td>
+                                <td>Filament</td>
+                                <td>web, auth</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/admin/login</td>
+                                <td>filament.admin.auth.login</td>
+                                <td>Filament</td>
+                                <td>web, guest</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-post">POST</span></td>
+                                <td>/admin/login</td>
+                                <td>filament.admin.auth.login</td>
+                                <td>Filament</td>
+                                <td>web, guest</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/satpam/login</td>
+                                <td>satpam.login</td>
+                                <td>AuthSatpamController@showLoginForm</td>
+                                <td>web, guest</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-post">POST</span></td>
+                                <td>/satpam/login</td>
+                                <td>satpam.login.post</td>
+                                <td>AuthSatpamController@login</td>
+                                <td>web, guest</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/satpam/dashboard</td>
+                                <td>satpam.dashboard</td>
+                                <td>SatpamController@dashboard</td>
+                                <td>web, auth.satpam</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/satpam/tambah-tamu</td>
+                                <td>satpam.tambah-tamu</td>
+                                <td>SatpamController@tambahTamu</td>
+                                <td>web, auth.satpam</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-post">POST</span></td>
+                                <td>/satpam/tambah-tamu</td>
+                                <td>satpam.store-tamu</td>
+                                <td>SatpamController@storeTamu</td>
+                                <td>web, auth.satpam</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/satpam/daftar-tamu</td>
+                                <td>satpam.daftar-tamu</td>
+                                <td>SatpamController@daftarTamu</td>
+                                <td>web, auth.satpam</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/satpam/jadwal-satpam</td>
+                                <td>satpam.jadwal-satpam</td>
+                                <td>SatpamController@jadwalSatpam</td>
+                                <td>web, auth.satpam</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-post">POST</span></td>
+                                <td>/satpam/logout</td>
+                                <td>satpam.logout</td>
+                                <td>AuthSatpamController@logout</td>
+                                <td>web, auth.satpam</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="nav-card">
+                    <h3>API Routes</h3>
+                    <table class="route-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>URI</th>
+                                <th>Name</th>
+                                <th>Controller</th>
+                                <th>Middleware</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/api/tamu</td>
+                                <td>api.tamu.index</td>
+                                <td>TamuApiController@index</td>
+                                <td>api, auth:sanctum</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-post">POST</span></td>
+                                <td>/api/tamu</td>
+                                <td>api.tamu.store</td>
+                                <td>TamuApiController@store</td>
+                                <td>api, auth:sanctum</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-get">GET</span></td>
+                                <td>/api/tamu/{id}</td>
+                                <td>api.tamu.show</td>
+                                <td>TamuApiController@show</td>
+                                <td>api, auth:sanctum</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-put">PUT</span></td>
+                                <td>/api/tamu/{id}</td>
+                                <td>api.tamu.update</td>
+                                <td>TamuApiController@update</td>
+                                <td>api, auth:sanctum</td>
+                            </tr>
+                            <tr>
+                                <td><span class="method-badge method-delete">DELETE</span></td>
+                                <td>/api/tamu/{id}</td>
+                                <td>api.tamu.destroy</td>
+                                <td>TamuApiController@destroy</td>
+                                <td>api, auth:sanctum</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#f39c12',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#f39c12',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa'
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Add smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading animation
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

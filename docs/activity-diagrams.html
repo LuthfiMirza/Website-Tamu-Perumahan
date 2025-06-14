@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Diagrams - Sistem Admin Tamu Perumahan</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 5px;
+        }
+        .diagram-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .mermaid {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .description {
+            background: #e8f4fd;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 10px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .nav {
+            background: #2c3e50;
+            padding: 15px;
+            margin: -30px -30px 30px -30px;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .nav a:hover {
+            background: #34495e;
+        }
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 8px 0;
+        }
+        .toc a {
+            color: #2c3e50;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        .toc a:hover {
+            background: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="#current">Fitur Saat Ini</a>
+            <a href="#future">Fitur Masa Depan</a>
+            <a href="#overview">Overview</a>
+        </div>
+
+        <h1>🏠 Activity Diagrams - Sistem Admin Tamu Perumahan</h1>
+        
+        <div class="description">
+            <strong>Dokumen ini berisi activity diagram untuk sistem admin tamu perumahan yang menggambarkan alur proses bisnis dari berbagai fitur yang ada dan yang akan dikembangkan.</strong>
+        </div>
+
+        <div class="toc">
+            <h3>📋 Daftar Isi</h3>
+            <ul>
+                <li><a href="#login">1. Login Satpam</a></li>
+                <li><a href="#tambah-tamu">2. Tambah Tamu Baru</a></li>
+                <li><a href="#logout-tamu">3. Logout Tamu</a></li>
+                <li><a href="#export">4. Export Data</a></li>
+                <li><a href="#dashboard">5. Dashboard Monitoring</a></li>
+                <li><a href="#admin-panel">6. Admin Panel</a></li>
+                <li><a href="#search">7. Search & Filter</a></li>
+                <li><a href="#edit">8. Edit Data Tamu</a></li>
+            </ul>
+        </div>
+
+        <section id="current">
+            <h2 id="login">1. 🔐 Activity Diagram - Login Satpam</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses autentikasi satpam untuk mengakses sistem admin tamu perumahan.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Buka Halaman Login]
+                        B --> C[Input Email & Password]
+                        C --> D{Validasi Data}
+                        D -->|Invalid| E[Tampilkan Error Message]
+                        E --> C
+                        D -->|Valid| F[Cek Kredensial di Database]
+                        F --> G{Kredensial Benar?}
+                        G -->|No| H[Tampilkan Error Login]
+                        H --> C
+                        G -->|Yes| I[Buat Session]
+                        I --> J[Redirect ke Dashboard]
+                        J --> K[Tampilkan Welcome Message]
+                        K --> L[End]
+                </div>
+            </div>
+
+            <h2 id="tambah-tamu">2. ➕ Activity Diagram - Tambah Tamu Baru</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses pendaftaran tamu baru oleh satpam dengan validasi data dan penyimpanan foto.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Satpam Klik Tambah Tamu]
+                        B --> C[Buka Form Tambah Tamu]
+                        C --> D[Input Data Tamu]
+                        D --> E[Upload Foto Tamu]
+                        E --> F[Pilih Jenis Tamu]
+                        F --> G[Input Plat Nomor]
+                        G --> H[Set Tanggal & Jam Masuk]
+                        H --> I[Input Tujuan]
+                        I --> J[Klik Submit]
+                        J --> K{Validasi Form}
+                        K -->|Invalid| L[Tampilkan Error Validasi]
+                        L --> D
+                        K -->|Valid| M[Simpan Foto ke Storage]
+                        M --> N[Simpan Data ke Database]
+                        N --> O[Catat Log Aktivitas]
+                        O --> P[Tampilkan Success Message]
+                        P --> Q[Redirect ke Daftar Tamu]
+                        Q --> R[End]
+                </div>
+            </div>
+
+            <h2 id="logout-tamu">3. 🚪 Activity Diagram - Logout Tamu</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses logout tamu ketika meninggalkan perumahan dengan update status dan waktu keluar.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Satpam Lihat Daftar Tamu]
+                        B --> C[Pilih Tamu yang Akan Logout]
+                        C --> D[Klik Tombol Logout]
+                        D --> E[Tampilkan Konfirmasi Dialog]
+                        E --> F{Konfirmasi Logout?}
+                        F -->|No| G[Batal Logout]
+                        G --> B
+                        F -->|Yes| H[Update Status Tamu]
+                        H --> I[Set Jam Keluar]
+                        I --> J[Update Posisi ke Sudah Keluar]
+                        J --> K[Catat Log Aktivitas]
+                        K --> L[Tampilkan Success Message]
+                        L --> M[Refresh Daftar Tamu]
+                        M --> N[End]
+                </div>
+            </div>
+
+            <h2 id="export">4. 📊 Activity Diagram - Export Data Tamu</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses export data tamu ke format PDF atau Excel dengan filter dan formatting.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Satpam Buka Daftar Tamu]
+                        B --> C[Klik Tombol Export]
+                        C --> D[Pilih Format Export]
+                        D --> E{Format Export}
+                        E -->|PDF| F[Generate PDF]
+                        E -->|Excel| G[Generate Excel]
+                        F --> H[Set Layout Landscape]
+                        G --> I[Create Excel Sheet]
+                        H --> J[Load Data Tamu]
+                        I --> J
+                        J --> K[Apply Filter Jika Ada]
+                        K --> L[Format Data]
+                        L --> M[Generate File]
+                        M --> N[Download File]
+                        N --> O[End]
+                </div>
+            </div>
+
+            <h2 id="dashboard">5. 📈 Activity Diagram - Dashboard Monitoring</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses loading dan monitoring dashboard dengan statistik real-time dan jadwal satpam.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Satpam Login Berhasil]
+                        B --> C[Load Dashboard]
+                        C --> D[Hitung Tamu Hari Ini]
+                        D --> E[Hitung Tamu Masuk]
+                        E --> F[Hitung Tamu Keluar]
+                        F --> G[Load Jadwal Satpam]
+                        G --> H[Load Tamu Terbaru]
+                        H --> I[Tampilkan Statistik]
+                        I --> J[Tampilkan Jadwal 3 Hari]
+                        J --> K[Tampilkan Tabel Tamu Terbaru]
+                        K --> L{Auto Refresh?}
+                        L -->|Yes| M[Wait 30 Detik]
+                        M --> D
+                        L -->|No| N[End]
+                </div>
+            </div>
+
+            <h2 id="admin-panel">6. ⚙️ Activity Diagram - Admin Panel (Filament)</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses navigasi dan operasi CRUD dalam admin panel menggunakan Filament.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Admin Login ke Filament]
+                        B --> C{Pilih Menu}
+                        C -->|Data Tamu| D[Kelola Data Tamu]
+                        C -->|User Management| E[Kelola User]
+                        C -->|Log Aktivitas| F[Lihat Log]
+                        C -->|Jadwal Satpam| G[Kelola Jadwal]
+                        
+                        D --> D1[CRUD Tamu]
+                        D1 --> D2[Filter & Search]
+                        D2 --> D3[Bulk Actions]
+                        
+                        E --> E1[CRUD User]
+                        E1 --> E2[Assign Roles]
+                        E2 --> E3[Manage Permissions]
+                        
+                        F --> F1[View Activity Logs]
+                        F1 --> F2[Filter by User/Date]
+                        
+                        G --> G1[CRUD Jadwal]
+                        G1 --> G2[Set Shift Satpam]
+                        
+                        D3 --> H[End]
+                        E3 --> H
+                        F2 --> H
+                        G2 --> H
+                </div>
+            </div>
+
+            <h2 id="search">7. 🔍 Activity Diagram - Search & Filter Tamu</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses pencarian dan filtering data tamu dengan berbagai kriteria.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Buka Daftar Tamu]
+                        B --> C{Pilih Action}
+                        C -->|Search| D[Input Keyword]
+                        C -->|Filter| E[Pilih Filter]
+                        C -->|View All| F[Load All Data]
+                        
+                        D --> G[Search by Plat/Jenis Tamu]
+                        E --> H{Jenis Filter}
+                        H -->|Today| I[Filter Tamu Hari Ini]
+                        H -->|Status| J[Filter by Posisi]
+                        H -->|Date Range| K[Filter by Tanggal]
+                        
+                        G --> L[Execute Query]
+                        I --> L
+                        J --> L
+                        K --> L
+                        F --> L
+                        
+                        L --> M[Display Results]
+                        M --> N[Pagination]
+                        N --> O{More Actions?}
+                        O -->|Yes| C
+                        O -->|No| P[End]
+                </div>
+            </div>
+
+            <h2 id="edit">8. ✏️ Activity Diagram - Edit Data Tamu</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Proses editing data tamu yang sudah ada dengan validasi dan logging.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start] --> B[Pilih Tamu dari Daftar]
+                        B --> C[Klik Edit]
+                        C --> D[Load Data Tamu]
+                        D --> E[Tampilkan Form Edit]
+                        E --> F[Ubah Data yang Diperlukan]
+                        F --> G[Klik Update]
+                        G --> H{Validasi Data}
+                        H -->|Invalid| I[Tampilkan Error]
+                        I --> F
+                        H -->|Valid| J[Update Database]
+                        J --> K[Catat Log Aktivitas]
+                        K --> L[Tampilkan Success Message]
+                        L --> M[Redirect ke Daftar]
+                        M --> N[End]
+                </div>
+            </div>
+        </section>
+
+        <section id="overview">
+            <h2>🎯 Overview Sistem</h2>
+            <div class="diagram-container">
+                <div class="description">
+                    Gambaran umum alur kerja sistem admin tamu perumahan secara keseluruhan.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        A[Start System] --> B{User Type}
+                        B -->|Satpam| C[Satpam Login]
+                        B -->|Admin| D[Admin Login]
+                        
+                        C --> E[Satpam Dashboard]
+                        E --> F{Satpam Actions}
+                        F -->|Tambah Tamu| G[Process Tambah Tamu]
+                        F -->|Lihat Daftar| H[Process Daftar Tamu]
+                        F -->|Export Data| I[Process Export]
+                        F -->|Logout Tamu| J[Process Logout Tamu]
+                        
+                        D --> K[Admin Panel]
+                        K --> L{Admin Actions}
+                        L -->|Manage Tamu| M[CRUD Tamu]
+                        L -->|Manage Users| N[CRUD Users]
+                        L -->|View Logs| O[View Activity Logs]
+                        L -->|Manage Schedule| P[CRUD Jadwal]
+                        
+                        G --> Q[Log Activity]
+                        H --> Q
+                        I --> Q
+                        J --> Q
+                        M --> Q
+                        N --> Q
+                        O --> Q
+                        P --> Q
+                        
+                        Q --> R[Update Dashboard]
+                        R --> S[End Process]
+                </div>
+            </div>
+        </section>
+
+        <div style="margin-top: 50px; padding: 20px; background: #2c3e50; color: white; border-radius: 5px; text-align: center;">
+            <h3>📋 Kesimpulan</h3>
+            <p>Activity diagram ini menggambarkan alur proses bisnis lengkap dari sistem admin tamu perumahan. Setiap diagram menunjukkan langkah-langkah detail, decision points, dan error handling yang diperlukan untuk memastikan sistem berjalan dengan baik.</p>
+            <p><strong>Sistem saat ini sudah memiliki foundation yang solid dengan fitur-fitur dasar yang lengkap untuk manajemen tamu perumahan.</strong></p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

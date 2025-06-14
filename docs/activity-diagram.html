@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Diagram - Sistem Administrasi Tamu</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 150px;
+        }
+
+        .tab.active {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .diagram-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .process-info {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #e74c3c;
+        }
+
+        .process-info h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .process-steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .process-steps li {
+            counter-increment: step-counter;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .process-steps li:last-child {
+            border-bottom: none;
+        }
+
+        .process-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 12px;
+            background: #e74c3c;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .mermaid {
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Enhanced Mermaid styling */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            stroke-width: 2px;
+        }
+
+        .mermaid .edgePath .path {
+            stroke-width: 2px;
+        }
+
+        .mermaid .edgeLabel {
+            background-color: white;
+            border-radius: 4px;
+            padding: 2px 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-shape {
+            width: 30px;
+            height: 20px;
+            border: 2px solid #2c3e50;
+        }
+
+        .legend-shape.start-end {
+            border-radius: 50%;
+            background: #27ae60;
+        }
+
+        .legend-shape.process {
+            background: #3498db;
+        }
+
+        .legend-shape.decision {
+            transform: rotate(45deg);
+            background: #f39c12;
+        }
+
+        .legend-shape.data {
+            background: #9b59b6;
+            border-radius: 0 10px 0 10px;
+        }
+
+        .legend-shape.success {
+            background: #2ecc71;
+        }
+
+        .legend-shape.admin {
+            background: #9b59b6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Activity Diagram</h1>
+            <p>Alur Proses Sistem Administrasi Tamu</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('login')">Login Satpam</button>
+                <button class="tab" onclick="showTab('tambah-tamu')">Tambah Tamu</button>
+                <button class="tab" onclick="showTab('logout-tamu')">Logout Tamu</button>
+                <button class="tab" onclick="showTab('kelola-jadwal')">Kelola Jadwal</button>
+                <button class="tab" onclick="showTab('admin-dashboard')">Admin Dashboard</button>
+            </div>
+
+            <!-- Login Satpam Tab -->
+            <div id="login" class="tab-content active">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-shape start-end"></div>
+                        <span>Start/End</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape process"></div>
+                        <span>Process</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape decision"></div>
+                        <span>Decision</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape success"></div>
+                        <span>Success</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape data"></div>
+                        <span>Error</span>
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <h2 class="diagram-title">Proses Login Satpam</h2>
+                    <div class="mermaid">
+                        flowchart TD
+                            A([Start]) --> B[Buka Halaman Login]
+                            B --> C[Input Email dan Password]
+                            C --> D{Validasi Data}
+                            D -->|Invalid| E[Tampilkan Error]
+                            E --> C
+                            D -->|Valid| F[Cek Database]
+                            F --> G{User Exists?}
+                            G -->|No| H[Tampilkan Error Login]
+                            H --> C
+                            G -->|Yes| I{Role Satpam?}
+                            I -->|No| J[Access Denied]
+                            J --> C
+                            I -->|Yes| K[Create Session]
+                            K --> L[Redirect ke Dashboard]
+                            L --> M[Tampilkan Menu Satpam]
+                            M --> N([End])
+                            
+                            classDef startEnd fill:#27ae60,stroke:#27ae60,stroke-width:2px,color:#fff
+                            classDef process fill:#3498db,stroke:#3498db,stroke-width:2px,color:#fff
+                            classDef decision fill:#f39c12,stroke:#f39c12,stroke-width:2px,color:#fff
+                            classDef error fill:#e74c3c,stroke:#e74c3c,stroke-width:2px,color:#fff
+                            
+                            class A,N startEnd
+                            class B,C,F,K,L,M process
+                            class D,G,I decision
+                            class E,H,J error
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <h3>Langkah-langkah Proses Login Satpam</h3>
+                    <ol class="process-steps">
+                        <li>Satpam mengakses halaman login sistem</li>
+                        <li>Memasukkan email dan password</li>
+                        <li>Sistem melakukan validasi format data</li>
+                        <li>Jika format salah, tampilkan pesan error</li>
+                        <li>Sistem mengecek keberadaan user di database</li>
+                        <li>Jika user tidak ditemukan, tampilkan error login</li>
+                        <li>Sistem memverifikasi role user adalah 'satpam'</li>
+                        <li>Jika bukan satpam, akses ditolak</li>
+                        <li>Jika valid, buat session dan redirect ke dashboard</li>
+                        <li>Tampilkan menu khusus satpam</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Tambah Tamu Tab -->
+            <div id="tambah-tamu" class="tab-content">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-shape start-end"></div>
+                        <span>Start/End</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape process"></div>
+                        <span>Process</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape decision"></div>
+                        <span>Decision</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape success"></div>
+                        <span>Success</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape data"></div>
+                        <span>Error</span>
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <h2 class="diagram-title">Proses Menambah Data Tamu</h2>
+                    <div class="mermaid">
+                        flowchart TD
+                            A([Start]) --> B[Satpam Login]
+                            B --> C[Pilih Menu Tambah Tamu]
+                            C --> D[Tampilkan Form Input]
+                            D --> E[Upload Foto Tamu]
+                            E --> F[Input Jenis Tamu]
+                            F --> G[Input Plat Nomor]
+                            G --> H[Input Tujuan Kunjungan]
+                            H --> I[Input Posisi Lokasi]
+                            I --> J[Set Tanggal Otomatis]
+                            J --> K[Set Jam Masuk Otomatis]
+                            K --> L{Validasi Form}
+                            L -->|Data Kosong| M[Tampilkan Error Validasi]
+                            M --> F
+                            L -->|Format Salah| N[Tampilkan Error Format]
+                            N --> F
+                            L -->|Valid| O[Proses Simpan Data]
+                            O --> P{Simpan ke Database}
+                            P -->|Gagal| Q[Tampilkan Error Database]
+                            Q --> F
+                            P -->|Berhasil| R[Generate ID Tamu]
+                            R --> S[Catat Log Aktivitas]
+                            S --> T[Tampilkan Pesan Sukses]
+                            T --> U[Redirect ke Daftar Tamu]
+                            U --> V([End])
+                            
+                            classDef startEnd fill:#27ae60,stroke:#27ae60,stroke-width:2px,color:#fff
+                            classDef process fill:#3498db,stroke:#3498db,stroke-width:2px,color:#fff
+                            classDef decision fill:#f39c12,stroke:#f39c12,stroke-width:2px,color:#fff
+                            classDef error fill:#e74c3c,stroke:#e74c3c,stroke-width:2px,color:#fff
+                            classDef success fill:#2ecc71,stroke:#2ecc71,stroke-width:2px,color:#fff
+                            
+                            class A,V startEnd
+                            class B,C,D,E,F,G,H,I,J,K,O,R,S,U process
+                            class L,P decision
+                            class M,N,Q error
+                            class T success
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <h3>Detail Proses Tambah Tamu</h3>
+                    <ol class="process-steps">
+                        <li>Satpam melakukan login ke sistem dengan kredensial yang valid</li>
+                        <li>Memilih menu "Tambah Tamu" dari dashboard utama</li>
+                        <li>Sistem menampilkan form input data tamu</li>
+                        <li>Upload foto tamu (opsional, format JPG/PNG)</li>
+                        <li>Memilih jenis tamu dari dropdown (VIP, Reguler, Vendor, Keluarga)</li>
+                        <li>Input nomor plat kendaraan tamu</li>
+                        <li>Input tujuan kunjungan (alamat/nama yang dituju)</li>
+                        <li>Input posisi/lokasi tamu saat ini</li>
+                        <li>Sistem otomatis mengisi tanggal hari ini</li>
+                        <li>Sistem otomatis mengisi jam masuk saat ini</li>
+                        <li>Validasi semua field yang wajib diisi</li>
+                        <li>Validasi format data (email, nomor telepon, dll.)</li>
+                        <li>Simpan data ke database tabel 'tamu'</li>
+                        <li>Generate ID unik untuk tamu</li>
+                        <li>Catat aktivitas ke log sistem</li>
+                        <li>Tampilkan pesan sukses dan redirect ke daftar tamu</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Logout Tamu Tab -->
+            <div id="logout-tamu" class="tab-content">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-shape start-end"></div>
+                        <span>Start/End</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape process"></div>
+                        <span>Process</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape decision"></div>
+                        <span>Decision</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape success"></div>
+                        <span>Success</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape data"></div>
+                        <span>Error</span>
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <h2 class="diagram-title">Proses Logout Tamu (Checkout)</h2>
+                    <div class="mermaid">
+                        flowchart TD
+                            A([Start]) --> B[Satpam Login]
+                            B --> C[Pilih Menu Daftar Tamu]
+                            C --> D[Tampilkan List Tamu Aktif]
+                            D --> E[Cari Tamu yang Checkout]
+                            E --> F{Tamu Ditemukan?}
+                            F -->|Tidak| G[Tampilkan Pesan Error]
+                            G --> E
+                            F -->|Ya| H[Pilih Tamu untuk Checkout]
+                            H --> I[Tampilkan Detail Tamu]
+                            I --> J{Konfirmasi Checkout?}
+                            J -->|Tidak| D
+                            J -->|Ya| K[Set Jam Keluar Otomatis]
+                            K --> L[Update Status Tamu]
+                            L --> M{Update Berhasil?}
+                            M -->|Gagal| N[Tampilkan Error Database]
+                            N --> I
+                            M -->|Berhasil| O[Catat Log Aktivitas]
+                            O --> P[Tampilkan Pesan Sukses]
+                            P --> Q[Generate Receipt Checkout]
+                            Q --> R[Update Dashboard Stats]
+                            R --> S[Refresh Daftar Tamu]
+                            S --> T([End])
+                            
+                            classDef startEnd fill:#27ae60,stroke:#27ae60,stroke-width:2px,color:#fff
+                            classDef process fill:#3498db,stroke:#3498db,stroke-width:2px,color:#fff
+                            classDef decision fill:#f39c12,stroke:#f39c12,stroke-width:2px,color:#fff
+                            classDef error fill:#e74c3c,stroke:#e74c3c,stroke-width:2px,color:#fff
+                            classDef success fill:#2ecc71,stroke:#2ecc71,stroke-width:2px,color:#fff
+                            
+                            class A,T startEnd
+                            class B,C,D,E,H,I,K,L,O,Q,R,S process
+                            class F,J,M decision
+                            class G,N error
+                            class P success
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <h3>Detail Proses Logout Tamu</h3>
+                    <ol class="process-steps">
+                        <li>Satpam melakukan login ke sistem</li>
+                        <li>Memilih menu "Daftar Tamu" dari dashboard</li>
+                        <li>Sistem menampilkan list tamu yang masih aktif (belum checkout)</li>
+                        <li>Satpam mencari tamu yang akan checkout menggunakan fitur search</li>
+                        <li>Jika tamu tidak ditemukan, tampilkan pesan error</li>
+                        <li>Jika ditemukan, pilih tamu untuk proses checkout</li>
+                        <li>Sistem menampilkan detail lengkap tamu</li>
+                        <li>Konfirmasi proses checkout dari satpam</li>
+                        <li>Jika tidak dikonfirmasi, kembali ke daftar tamu</li>
+                        <li>Jika dikonfirmasi, sistem otomatis set jam keluar saat ini</li>
+                        <li>Update status tamu menjadi "checkout" di database</li>
+                        <li>Jika update gagal, tampilkan error database</li>
+                        <li>Jika berhasil, catat aktivitas ke log sistem</li>
+                        <li>Tampilkan pesan sukses checkout</li>
+                        <li>Generate receipt/bukti checkout (opsional)</li>
+                        <li>Update statistik dashboard real-time</li>
+                        <li>Refresh tampilan daftar tamu</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Kelola Jadwal Tab -->
+            <div id="kelola-jadwal" class="tab-content">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-shape start-end"></div>
+                        <span>Start/End</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape process"></div>
+                        <span>Process</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape decision"></div>
+                        <span>Decision</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape success"></div>
+                        <span>Success</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape data"></div>
+                        <span>Error</span>
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <h2 class="diagram-title">Proses Kelola Jadwal Satpam</h2>
+                    <div class="mermaid">
+                        flowchart TD
+                            A([Start]) --> B[Admin Login]
+                            B --> C[Akses Menu Penjadwalan]
+                            C --> D[Load Data Satpam]
+                            D --> E[Tampilkan Daftar Jadwal]
+                            E --> F{Pilih Aksi}
+                            
+                            F -->|Tambah Jadwal| G[Form Tambah Jadwal]
+                            G --> H[Pilih User Satpam]
+                            H --> I[Set Tanggal Jadwal]
+                            I --> J[Pilih Shift Kerja]
+                            J --> K[Set Jam Mulai]
+                            K --> L[Set Jam Selesai]
+                            L --> M{Validasi Jadwal}
+                            M -->|Konflik Waktu| N[Tampilkan Error Konflik]
+                            N --> I
+                            M -->|Data Invalid| O[Tampilkan Error Validasi]
+                            O --> I
+                            M -->|Valid| P[Simpan ke Database]
+                            
+                            F -->|Edit Jadwal| Q[Pilih Jadwal Existing]
+                            Q --> R[Load Data Jadwal]
+                            R --> S[Form Edit Jadwal]
+                            S --> T[Update Data]
+                            T --> U{Validasi Update}
+                            U -->|Invalid| V[Tampilkan Error]
+                            V --> S
+                            U -->|Valid| W[Update Database]
+                            
+                            F -->|Hapus Jadwal| X[Pilih Jadwal]
+                            X --> Y{Konfirmasi Hapus?}
+                            Y -->|Tidak| E
+                            Y -->|Ya| Z[Hapus dari Database]
+                            
+                            P --> AA[Catat Log Aktivitas]
+                            W --> AA
+                            Z --> AA
+                            AA --> BB[Refresh Daftar]
+                            BB --> CC[Tampilkan Pesan Sukses]
+                            CC --> DD([End])
+                            
+                            classDef startEnd fill:#27ae60,stroke:#27ae60,stroke-width:2px,color:#fff
+                            classDef process fill:#3498db,stroke:#3498db,stroke-width:2px,color:#fff
+                            classDef decision fill:#f39c12,stroke:#f39c12,stroke-width:2px,color:#fff
+                            classDef error fill:#e74c3c,stroke:#e74c3c,stroke-width:2px,color:#fff
+                            classDef success fill:#2ecc71,stroke:#2ecc71,stroke-width:2px,color:#fff
+                            
+                            class A,DD startEnd
+                            class B,C,D,E,G,H,I,J,K,L,P,Q,R,S,T,W,X,Z,AA,BB process
+                            class F,M,U,Y decision
+                            class N,O,V error
+                            class CC success
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <h3>Fitur Kelola Jadwal Satpam</h3>
+                    <ol class="process-steps">
+                        <li>Admin melakukan login dengan role administrator</li>
+                        <li>Mengakses menu "Penjadwalan Satpam" dari admin panel</li>
+                        <li>Sistem load data semua satpam yang terdaftar</li>
+                        <li>Menampilkan daftar jadwal dalam bentuk tabel/kalender</li>
+                        <li>Admin memilih aksi: Tambah, Edit, atau Hapus jadwal</li>
+                        <li><strong>Tambah Jadwal:</strong> Pilih satpam, set tanggal, shift, jam kerja</li>
+                        <li><strong>Edit Jadwal:</strong> Modifikasi jadwal yang sudah ada</li>
+                        <li><strong>Hapus Jadwal:</strong> Konfirmasi penghapusan data</li>
+                        <li>Validasi tidak ada konflik jadwal antar satpam</li>
+                        <li>Validasi format waktu dan tanggal yang benar</li>
+                        <li>Simpan perubahan ke database tabel 'penjadwalan_satpam'</li>
+                        <li>Catat aktivitas admin ke log sistem</li>
+                        <li>Refresh tampilan dan tampilkan pesan sukses</li>
+                        <li>Sistem dapat export jadwal ke PDF/Excel</li>
+                        <li>Notifikasi otomatis ke satpam terkait (fitur masa depan)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard Tab -->
+            <div id="admin-dashboard" class="tab-content">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-shape start-end"></div>
+                        <span>Start/End</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape process"></div>
+                        <span>Process</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape decision"></div>
+                        <span>Decision</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape success"></div>
+                        <span>Success</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape data"></div>
+                        <span>Error</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape admin"></div>
+                        <span>Admin</span>
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <h2 class="diagram-title">Proses Admin Dashboard</h2>
+                    <div class="mermaid">
+                        flowchart TD
+                            A([Start]) --> B[Admin Login]
+                            B --> C[Verifikasi Role Admin]
+                            C --> D{Role Valid?}
+                            D -->|Tidak| E[Access Denied]
+                            E --> F([End])
+                            D -->|Ya| G[Load Dashboard Data]
+                            G --> H[Hitung Total Tamu]
+                            H --> I[Hitung Tamu Hari Ini]
+                            I --> J[Hitung Tamu Aktif]
+                            J --> K[Load Recent Activities]
+                            K --> L[Generate Chart Data]
+                            L --> M[Render Dashboard Widgets]
+                            M --> N[Tampilkan Menu Admin]
+                            N --> O{Pilih Menu}
+                            
+                            O -->|User Management| P[Kelola Pengguna]
+                            P --> P1[CRUD Users]
+                            P1 --> P2[Set Role Permission]
+                            P2 --> P3[Update Database]
+                            
+                            O -->|Tamu Management| Q[Kelola Data Tamu]
+                            Q --> Q1[View Edit Delete Tamu]
+                            Q1 --> Q2[Export Data Tamu]
+                            Q2 --> Q3[Generate Reports]
+                            
+                            O -->|Jadwal Satpam| R[Kelola Jadwal]
+                            R --> R1[CRUD Jadwal Satpam]
+                            R1 --> R2[Validasi Konflik]
+                            R2 --> R3[Update Jadwal]
+                            
+                            O -->|Log Aktivitas| S[Monitor Aktivitas]
+                            S --> S1[Filter Search Logs]
+                            S1 --> S2[Export Log Data]
+                            
+                            O -->|System Settings| T[Konfigurasi Sistem]
+                            T --> T1[Backup Database]
+                            T1 --> T2[System Maintenance]
+                            
+                            P3 --> U[Catat Log Aktivitas]
+                            Q3 --> U
+                            R3 --> U
+                            S2 --> U
+                            T2 --> U
+                            U --> V[Update Dashboard]
+                            V --> W[Tampilkan Notifikasi]
+                            W --> X{Lanjut Aksi?}
+                            X -->|Ya| O
+                            X -->|Tidak| Y[Logout]
+                            Y --> Z([End])
+                            
+                            classDef startEnd fill:#27ae60,stroke:#27ae60,stroke-width:2px,color:#fff
+                            classDef process fill:#3498db,stroke:#3498db,stroke-width:2px,color:#fff
+                            classDef decision fill:#f39c12,stroke:#f39c12,stroke-width:2px,color:#fff
+                            classDef error fill:#e74c3c,stroke:#e74c3c,stroke-width:2px,color:#fff
+                            classDef success fill:#2ecc71,stroke:#2ecc71,stroke-width:2px,color:#fff
+                            classDef admin fill:#9b59b6,stroke:#9b59b6,stroke-width:2px,color:#fff
+                            
+                            class A,F,Z startEnd
+                            class B,C,G,H,I,J,K,L,M,N,P,P1,P2,P3,Q,Q1,Q2,Q3,R,R1,R2,R3,S,S1,S2,T,T1,T2,U,V,Y process
+                            class D,O,X decision
+                            class E error
+                            class W success
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <h3>Fitur Admin Dashboard</h3>
+                    <ol class="process-steps">
+                        <li>Admin melakukan login dengan kredensial yang valid</li>
+                        <li>Sistem memverifikasi role user adalah 'admin'</li>
+                        <li>Jika bukan admin, akses ditolak dan sistem berakhir</li>
+                        <li>Load data dashboard: statistik tamu, aktivitas terbaru</li>
+                        <li>Hitung total tamu yang pernah berkunjung</li>
+                        <li>Hitung jumlah tamu yang masuk hari ini</li>
+                        <li>Hitung jumlah tamu yang masih aktif (belum checkout)</li>
+                        <li>Load aktivitas terbaru dari log sistem</li>
+                        <li>Generate data untuk chart dan grafik statistik</li>
+                        <li>Render widget dashboard dengan data real-time</li>
+                        <li>Tampilkan menu navigasi khusus admin</li>
+                        <li><strong>User Management:</strong> CRUD pengguna, set role & permission</li>
+                        <li><strong>Tamu Management:</strong> Kelola data tamu, export, generate reports</li>
+                        <li><strong>Jadwal Satpam:</strong> CRUD jadwal, validasi konflik waktu</li>
+                        <li><strong>Log Aktivitas:</strong> Monitor dan filter aktivitas sistem</li>
+                        <li><strong>System Settings:</strong> Backup database, maintenance sistem</li>
+                        <li>Setiap aksi admin tercatat dalam log aktivitas</li>
+                        <li>Dashboard terupdate otomatis setelah setiap aksi</li>
+                        <li>Tampilkan notifikasi sukses/error untuk setiap operasi</li>
+                        <li>Admin dapat logout atau melanjutkan aksi lainnya</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid with enhanced configuration
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            },
+            themeVariables: {
+                primaryColor: '#3498db',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#3498db',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f8f9fa'
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Re-render mermaid diagrams for the active tab
+            setTimeout(() => {
+                const activeTabMermaid = document.querySelector(`#${tabName} .mermaid`);
+                if (activeTabMermaid) {
+                    mermaid.init(undefined, activeTabMermaid);
+                }
+            }, 100);
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize mermaid for the active tab
+            setTimeout(() => {
+                const activeMermaid = document.querySelector('#login .mermaid');
+                if (activeMermaid) {
+                    mermaid.init(undefined, activeMermaid);
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

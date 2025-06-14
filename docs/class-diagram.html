@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Diagram - Sistem Administrasi Tamu</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        .tab.active {
+            background: #9b59b6;
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .class-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .class-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #9b59b6;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .class-card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .class-card h3::before {
+            content: "📦";
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h4 {
+            color: #9b59b6;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #9b59b6;
+            padding-bottom: 5px;
+        }
+
+        .method-list, .property-list {
+            list-style: none;
+        }
+
+        .method-list li, .property-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .method-list li:last-child, .property-list li:last-child {
+            border-bottom: none;
+        }
+
+        .visibility {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .type {
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .method-name {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .property-name {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .mermaid {
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-symbol {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .legend-symbol.public { background: #27ae60; }
+        .legend-symbol.private { background: #e74c3c; }
+        .legend-symbol.protected { background: #f39c12; }
+        .legend-symbol.static { background: #9b59b6; }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                margin-bottom: 5px;
+            }
+            
+            .class-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ Class Diagram</h1>
+            <p>Struktur Kelas Sistem Administrasi Tamu</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('overview')">Overview</button>
+                <button class="tab" onclick="showTab('models')">Models</button>
+                <button class="tab" onclick="showTab('controllers')">Controllers</button>
+                <button class="tab" onclick="showTab('resources')">Resources</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-symbol public">+</div>
+                        <span>Public</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-symbol private">-</div>
+                        <span>Private</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-symbol protected">#</div>
+                        <span>Protected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-symbol static">$</div>
+                        <span>Static</span>
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="mermaid">
+                        classDiagram
+                            class User {
+                                +int id
+                                +string name
+                                +string email
+                                +string password
+                                +string nama_role
+                                +string phone
+                                +timestamp created_at
+                                +timestamp updated_at
+                                +hasMany() logAktivitas
+                                +hasMany() personalAccessTokens
+                            }
+                            
+                            class Tamu {
+                                +int id
+                                +string gambar
+                                +string jenis_tamu
+                                +date tanggal
+                                +time jam_masuk
+                                +time jam_keluar
+                                +string posisi
+                                +string tujuan
+                                +string plat_nomor
+                                +timestamp created_at
+                                +timestamp updated_at
+                                +scopeToday()
+                                +scopeByJenis()
+                            }
+                            
+                            class PenjadwalanSatpam {
+                                +int id
+                                +string nama
+                                +string senin
+                                +string selasa
+                                +string rabu
+                                +string kamis
+                                +string jumat
+                                +string sabtu
+                                +string minggu
+                                +timestamp created_at
+                                +timestamp updated_at
+                                +getJadwalHariIni()
+                                +isLibur()
+                            }
+                            
+                            class LogAktivitas {
+                                +int id
+                                +string aktivitas
+                                +string user_id
+                                +text deskripsi
+                                +timestamp waktu
+                                +timestamp created_at
+                                +timestamp updated_at
+                                +belongsTo() user
+                                +scopeRecent()
+                            }
+                            
+                            class SatpamController {
+                                +index()
+                                +login()
+                                +authenticate()
+                                +dashboard()
+                                +tambahTamu()
+                                +storeTamu()
+                                +daftarTamu()
+                                +jadwalSatpam()
+                                +logout()
+                            }
+                            
+                            class AuthSatpamController {
+                                +showLoginForm()
+                                +login()
+                                +logout()
+                                +validateCredentials()
+                                +createSession()
+                            }
+                            
+                            class UserResource {
+                                +form()
+                                +table()
+                                +getPages()
+                                +getRelations()
+                            }
+                            
+                            class TamuResource {
+                                +form()
+                                +table()
+                                +getPages()
+                                +filters()
+                            }
+                            
+                            User ||--o{ LogAktivitas : creates
+                            SatpamController --> Tamu : manages
+                            SatpamController --> PenjadwalanSatpam : views
+                            AuthSatpamController --> User : authenticates
+                            UserResource --> User : manages
+                            TamuResource --> Tamu : manages
+                    </div>
+                </div>
+            </div>
+
+            <!-- Models Tab -->
+            <div id="models" class="tab-content">
+                <div class="class-info">
+                    <div class="class-card">
+                        <h3>User Model</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">+</span> <span class="property-name">$fillable</span>: <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$hidden</span>: <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$casts</span>: <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$table</span>: <span class="type">string</span> = 'users'</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">logAktivitas</span>(): <span class="type">HasMany</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">personalAccessTokens</span>(): <span class="type">HasMany</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">isSatpam</span>(): <span class="type">bool</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">isAdmin</span>(): <span class="type">bool</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="class-card">
+                        <h3>Tamu Model</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">+</span> <span class="property-name">$fillable</span>: <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$table</span>: <span class="type">string</span> = 'tamu'</li>
+                                <li><span class="visibility">+</span> <span class="property-name">$casts</span>: <span class="type">array</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">scopeToday</span>(<span class="type">$query</span>): <span class="type">Builder</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">scopeByJenis</span>(<span class="type">$query, $jenis</span>): <span class="type">Builder</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">isCheckedOut</span>(): <span class="type">bool</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">getDurasiKunjungan</span>(): <span class="type">string</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="class-card">
+                        <h3>PenjadwalanSatpam Model</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">+</span> <span class="property-name">$fillable</span>: <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$table</span>: <span class="type">string</span> = 'penjadwalan_satpam'</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">getJadwalHariIni</span>(): <span class="type">string</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">isLibur</span>(<span class="type">$hari</span>): <span class="type">bool</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">getJadwalByHari</span>(<span class="type">$hari</span>): <span class="type">string</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="class-card">
+                        <h3>LogAktivitas Model</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">+</span> <span class="property-name">$fillable</span>: <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$table</span>: <span class="type">string</span> = 'log_aktivitas'</li>
+                                <li><span class="visibility">+</span> <span class="property-name">$casts</span>: <span class="type">array</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">user</span>(): <span class="type">BelongsTo</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">scopeRecent</span>(<span class="type">$query</span>): <span class="type">Builder</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">scopeByUser</span>(<span class="type">$query, $userId</span>): <span class="type">Builder</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controllers Tab -->
+            <div id="controllers" class="tab-content">
+                <div class="class-info">
+                    <div class="class-card">
+                        <h3>SatpamController</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">#</span> <span class="property-name">$middleware</span>: <span class="type">array</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">index</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">login</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">authenticate</span>(<span class="type">Request $request</span>): <span class="type">RedirectResponse</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">dashboard</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">tambahTamu</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">storeTamu</span>(<span class="type">Request $request</span>): <span class="type">RedirectResponse</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">daftarTamu</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">jadwalSatpam</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">logout</span>(): <span class="type">RedirectResponse</span></li>
+                                <li><span class="visibility">-</span> <span class="method-name">logActivity</span>(<span class="type">string $activity</span>): <span class="type">void</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="class-card">
+                        <h3>AuthSatpamController</h3>
+                        
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">showLoginForm</span>(): <span class="type">View</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">login</span>(<span class="type">Request $request</span>): <span class="type">RedirectResponse</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">logout</span>(<span class="type">Request $request</span>): <span class="type">RedirectResponse</span></li>
+                                <li><span class="visibility">-</span> <span class="method-name">validateCredentials</span>(<span class="type">array $credentials</span>): <span class="type">bool</span></li>
+                                <li><span class="visibility">-</span> <span class="method-name">createSession</span>(<span class="type">User $user</span>): <span class="type">void</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="class-info">
+                    <div class="class-card">
+                        <h3>UserResource (Filament)</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">+</span> <span class="property-name">$model</span>: <span class="type">string</span> = User::class</li>
+                                <li><span class="visibility">+</span> <span class="property-name">$navigationIcon</span>: <span class="type">string</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$navigationGroup</span>: <span class="type">string</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">form</span>(<span class="type">Form $form</span>): <span class="type">Form</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">table</span>(<span class="type">Table $table</span>): <span class="type">Table</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">getPages</span>(): <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">getRelations</span>(): <span class="type">array</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="class-card">
+                        <h3>TamuResource (Filament)</h3>
+                        
+                        <div class="section">
+                            <h4>Properties</h4>
+                            <ul class="property-list">
+                                <li><span class="visibility">+</span> <span class="property-name">$model</span>: <span class="type">string</span> = Tamu::class</li>
+                                <li><span class="visibility">+</span> <span class="property-name">$navigationIcon</span>: <span class="type">string</span></li>
+                                <li><span class="visibility">+</span> <span class="property-name">$navigationGroup</span>: <span class="type">string</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h4>Methods</h4>
+                            <ul class="method-list">
+                                <li><span class="visibility">+</span> <span class="method-name">form</span>(<span class="type">Form $form</span>): <span class="type">Form</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">table</span>(<span class="type">Table $table</span>): <span class="type">Table</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">getPages</span>(): <span class="type">array</span></li>
+                                <li><span class="visibility">+</span> <span class="method-name">filters</span>(): <span class="type">array</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#9b59b6',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#9b59b6',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa'
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Add smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading animation
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
